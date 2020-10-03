@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class TowerBehavior : MonoBehaviour
 {
@@ -21,9 +23,15 @@ public class TowerBehavior : MonoBehaviour
 
     //recording
     private float degrees;
-    protected float timeSinceSpawn = 0;
     protected float recordingTimeFrame = 10;
-    protected bool isControlled = true;
+    protected bool isControlled;
+    private IEnumerator _playbackCoroutine;
+
+    /// <summary>
+    /// Key is a time since game started, value is a rotation at the moment of shooting.
+    /// There are two special exceptions, which don't represent a moment of shooting:
+    /// First entry represents the time when recording started, and the last entry when it ended.
+    /// </summary>
     protected List<KeyValuePair<float, float>> recording = new List<KeyValuePair<float, float>>();
 
     //bahavior
@@ -37,20 +45,20 @@ public class TowerBehavior : MonoBehaviour
         cam = Camera.main;
         Pointer.SetActive(false);
         centre = occupyingLocations[occupyingLocations.Count - 1] + new Vector2Int(1, 1) - occupyingLocations[0];
+        GainControl();
     }
 
     private void Update()
     {
         if (!isEnabled) return;
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.P) && _playbackCoroutine == null)
         {
             LoseControl();
         }
-        if (Input.GetKeyDown(KeyCode.O))
+        if (Input.GetKeyDown(KeyCode.O) && _playbackCoroutine != null)
         {
-            GainControl();
+            GainControl(true);
         }
-        timeSinceSpawn += Time.deltaTime;
 
         if (isControlled)
         {
@@ -61,8 +69,9 @@ public class TowerBehavior : MonoBehaviour
             {
                 _timeSinceLastShot = 0;
                 Shoot();
-                recording.Add(new KeyValuePair<float, float>(timeSinceSpawn, -degrees));
-                if(recording[0].Key <= timeSinceSpawn - 10)
+                recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
+                // TODO: is the following code correct?
+                if (recording[0].Key <= Time.time - 10)
                 {
                     recording.RemoveAt(0);
                 }
@@ -70,8 +79,15 @@ public class TowerBehavior : MonoBehaviour
         }
         else
         {
-
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Handles.Label(
+            transform.position + new Vector3(0.5f, -0.5f, 0),
+            $"{(_playbackCoroutine == null ? "Recording" : "Re-playing")}:{recording.Aggregate("", (acc, x) => acc + $"\n{x.Key}: {x.Value}")}"
+        );
     }
 
     protected virtual void FollowMouse(Vector2 mouseWorldPos)
@@ -96,41 +112,74 @@ public class TowerBehavior : MonoBehaviour
         bulletLife);
     }
 
-    protected virtual void LoseControl()
+    public void LoseControl()
     {
+        // Represent the ending of recording as a last entry
+        recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
         isControlled = false;
 
         //clean recording
-        float startTime = recording[0].Key;
-        List<KeyValuePair<float, float>> newRecording = new List<KeyValuePair<float, float>>();
-        foreach(var action in recording)
-        {
-            newRecording.Add(new KeyValuePair<float, float>(action.Key - startTime, action.Value));
-        }
+        // float startTime = recording[0].Key;
+        // List<KeyValuePair<float, float>> newRecording = new List<KeyValuePair<float, float>>();
+        // foreach (var action in recording)
+        // {
+        //     newRecording.Add(new KeyValuePair<float, float>(action.Key - startTime, action.Value));
+        // }
 
-        StartCoroutine(Play());
+        _playbackCoroutine = Play();
+        StartCoroutine(_playbackCoroutine);
+        OnLoseControl();
     }
 
-    protected virtual void GainControl()
+    protected virtual void OnLoseControl()
+    {
+    }
+
+    private void GainControl(bool stopPlaybackAndClearRecording = false)
     {
         isControlled = true;
-        StopCoroutine(Play());
+        if (stopPlaybackAndClearRecording)
+        {
+            StopCoroutine(_playbackCoroutine);
+            recording.Clear();
+        }
+
+        _playbackCoroutine = null;
+        // Represent the beginning of recording as a first entry
+        Assert.IsFalse(recording.Any());
+        recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
+        OnGainControl();
+    }
+
+    protected virtual void OnGainControl()
+    {
     }
 
     protected virtual IEnumerator Play()
     {
         while (true)
         {
-            float _t = 0;
-            for(int i = 0; i < recording.Count; ++i)
+            float playbackTime = 0;
+            // Skip first entry which represents start time, and don't shoot during last entry
+            for (int i = 1; i < recording.Count; ++i)
             {
-                while (_t <= recording[i].Key)
+                float playbackNextTarget = recording[i].Key - recording[0].Key;
+                float startDegrees = Pointer.transform.eulerAngles.z;
+                while (playbackTime <= playbackNextTarget)
                 {
-                    _t += Time.deltaTime;
+                    playbackTime += Time.deltaTime;
+                    var partialDegrees = startDegrees + (recording[i].Value - startDegrees)
+                        * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
+                           / (recording[i].Key - recording[i - 1].Key));
+                    Pointer.transform.eulerAngles = new Vector3(0f, 0f, partialDegrees);
                     yield return null;
                 }
+
                 Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value);
-                Shoot();
+                if (i != recording.Count - 1)
+                {
+                    Shoot();
+                }
             }
         }
     }
@@ -138,9 +187,10 @@ public class TowerBehavior : MonoBehaviour
     public virtual void Damage(float amount)
     {
         health -= amount;
-        if(health <= 0)
+        if (health <= 0)
         {
-            StopCoroutine(Play());
+            StopCoroutine(_playbackCoroutine);
+            _playbackCoroutine = null;
             //play some sounds
             Destroy(gameObject);
         }
