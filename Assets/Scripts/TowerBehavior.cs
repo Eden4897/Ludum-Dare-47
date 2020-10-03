@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class TowerBehavior : MonoBehaviour
 {
+    //references
+    [SerializeField] protected GameObject Bullet;
+    [SerializeField] protected GameObject Pointer;
     protected Camera cam;
 
     //bullet shooting calculations
@@ -14,16 +17,17 @@ public class TowerBehavior : MonoBehaviour
     //bullet info
     protected float bulletSpeed = 5;
     protected float bulletLife = 1;
+    protected float bulletDamage = 1;
 
-    //behavior
+    //recording
     private float degrees;
     protected float timeSinceSpawn = 0;
     protected float recordingTimeFrame = 10;
-
     protected bool isControlled = true;
     protected List<KeyValuePair<float, float>> recording = new List<KeyValuePair<float, float>>();
 
-    [SerializeField] private GameObject Bullet;
+    //bahavior
+    protected float health = 10;
 
     private void Start()
     {
@@ -67,15 +71,17 @@ public class TowerBehavior : MonoBehaviour
     protected virtual void FollowMouse(Vector2 mouseWorldPos)
     {
         degrees = Mathf.Atan2(mouseWorldPos.x - transform.position.x, mouseWorldPos.y - transform.position.y) * Mathf.Rad2Deg;
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, -degrees);
+        Pointer.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, -degrees);
     }
 
     protected virtual void Shoot()
     {
-        Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(transform.eulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(transform.eulerAngles.z * Mathf.Deg2Rad));
+        Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(Pointer.transform.eulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(Pointer.transform.eulerAngles.z * Mathf.Deg2Rad));
 
-        GameObject newBullet = Instantiate(Bullet, (Vector2)transform.position + direction * 0.5f, Quaternion.identity);
+        GameObject newBullet = Instantiate(Bullet, (Vector2)transform.position + direction * 0.8f, Quaternion.identity);
         newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+
+        newBullet.GetComponent<Bullet>().damage = bulletDamage;
 
         Utility.Invoke(()=> 
         {
@@ -87,8 +93,8 @@ public class TowerBehavior : MonoBehaviour
     protected virtual void LoseControl()
     {
         isControlled = false;
-        //clean recording
 
+        //clean recording
         float startTime = recording[0].Key;
         List<KeyValuePair<float, float>> newRecording = new List<KeyValuePair<float, float>>();
         foreach(var action in recording)
@@ -117,9 +123,20 @@ public class TowerBehavior : MonoBehaviour
                     _t += Time.deltaTime;
                     yield return null;
                 }
-                transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value);
+                Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value);
                 Shoot();
             }
+        }
+    }
+
+    public virtual void Damage(float amount)
+    {
+        health -= amount;
+        if(health <= 0)
+        {
+            StopCoroutine(Play());
+            //play some sounds
+            Destroy(gameObject);
         }
     }
 }

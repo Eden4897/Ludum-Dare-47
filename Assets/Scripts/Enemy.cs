@@ -5,8 +5,11 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public List<Vector2> path = new List<Vector2>();
-    private float speed = 10;
     private float _t = 0;
+
+    protected float speed = 1f;
+
+    protected float health = 1f;
 
     public IEnumerator Move()
     {
@@ -22,6 +25,16 @@ public class Enemy : MonoBehaviour
                 transform.position = Vector2.Lerp(start, end, _t/ distance * speed);
                 yield return null;
             }
+        }
+    }
+
+    public void Damage(float amout)
+    {
+        health -= amout;
+        if(health <= 0)
+        {
+            StopCoroutine(Move());
+            Destroy(gameObject);
         }
     }
 }

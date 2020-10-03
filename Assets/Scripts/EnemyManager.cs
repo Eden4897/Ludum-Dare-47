@@ -14,12 +14,12 @@ public class EnemyManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
-            GameObject newObj = Instantiate(enemy);
+            GameObject newObj = Instantiate(enemy, transform);
             Enemy newEnemy = newObj.GetComponent<Enemy>();
             newEnemy.path = path;
-            StartCoroutine(newEnemy.Move());
+            newEnemy.StartCoroutine(newEnemy.Move());
             enemies.Add(newEnemy);
         }
     }

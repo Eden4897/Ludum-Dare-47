@@ -26,6 +26,13 @@ public class Utility : MonoBehaviour
     private IEnumerator InvokeRoutine(Action target, float timeout)
     {
         yield return new WaitForSecondsRealtime(timeout);
-        target();
+        try
+        {
+            target();
+        }
+        catch (MissingReferenceException)
+        {
+            Debug.LogWarning("Lost reference to target action!");
+        }
     }
 }
