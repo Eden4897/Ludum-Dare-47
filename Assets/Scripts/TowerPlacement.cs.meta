@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a888da66b60755a4cbcf26ecbb79dae6
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - currentTower: {instanceID: 0}
+  - gridTilemap: {instanceID: 0}
+  - normalTile: {fileID: 11400000, guid: 9f8ac02ef75f1b44fa25e923ccdef73a, type: 2}
+  - occupiedTile: {fileID: 11400000, guid: 6bf8d507190db89448d5b4aa3f0ae2de, type: 2}
+  - freeTile: {fileID: 11400000, guid: d7e62918334cd7145b03a81dee001fa2, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

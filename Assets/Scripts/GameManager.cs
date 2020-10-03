@@ -2,12 +2,12 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class PlayerManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    private static PlayerManager _instance;
+    private static GameManager _instance;
 
-    public static PlayerManager Instance => (_instance ? _instance : _instance = FindObjectOfType<PlayerManager>())
-                                            ?? throw new Exception("Please add PlayerManager to the scene");
+    public static GameManager Instance => (_instance ? _instance : _instance = FindObjectOfType<GameManager>())
+                                            ?? throw new Exception("Please add GameManager to the scene");
 
     public Camera Camera { get; private set; }
 

@@ -28,14 +28,20 @@ public class TowerBehavior : MonoBehaviour
 
     //bahavior
     protected float health = 10;
+    public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
+    public Vector2 centre;
+    protected bool isEnabled = false;
 
     private void Start()
     {
         cam = Camera.main;
+        Pointer.SetActive(false);
+        centre = occupyingLocations[occupyingLocations.Count - 1] + new Vector2Int(1, 1) - occupyingLocations[0];
     }
 
     private void Update()
     {
+        if (!isEnabled) return;
         if (Input.GetKeyDown(KeyCode.P))
         {
             LoseControl();
@@ -107,7 +113,7 @@ public class TowerBehavior : MonoBehaviour
 
     protected virtual void GainControl()
     {
-        isControlled = false;
+        isControlled = true;
         StopCoroutine(Play());
     }
 
@@ -138,5 +144,33 @@ public class TowerBehavior : MonoBehaviour
             //play some sounds
             Destroy(gameObject);
         }
+    }
+
+    public void SetPosition(Vector2 pos)
+    {
+        //cauculate centre mid point of stucture
+        Vector2 _max = new Vector2(0, 0);
+        foreach (Vector2Int occupyingLocation in occupyingLocations)
+        {
+            if (occupyingLocation.x > _max.x)
+            {
+                _max.x = occupyingLocation.x;
+            }
+            if (occupyingLocation.y > _max.y)
+            {
+                _max.y = occupyingLocation.y;
+            }
+        }
+        _max += new Vector2(1, 1);
+        Vector2 target = pos + _max / 2f;
+
+        //move the object
+        transform.position = target;
+    }
+
+    public void Build()
+    {
+        isEnabled = true;
+        Pointer.SetActive(true);
     }
 }

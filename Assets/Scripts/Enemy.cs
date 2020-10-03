@@ -56,7 +56,7 @@ public class Enemy : MonoBehaviour
 
     public void OnFinish()
     {
-        PlayerManager.Instance.Damage(damageToPlayer);
+        GameManager.Instance.Damage(damageToPlayer);
         Destroy(gameObject);
     }
 }

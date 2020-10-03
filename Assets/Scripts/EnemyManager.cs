@@ -38,7 +38,7 @@ public class EnemyManager : MonoBehaviour
     {
         Enemy newEnemy = Instantiate(enemyPrefab.gameObject, transform).GetComponent<Enemy>();
         newEnemy.path = path;
-    newEnemy.StartCoroutine(newEnemy.Move());
+        newEnemy.StartCoroutine(newEnemy.Move());
         enemies.Add(newEnemy);
     }
 }

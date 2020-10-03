@@ -27,7 +27,7 @@ public class FinishLine : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (!PlayerManager.Instance.debug)
+        if (!GameManager.Instance.debug)
         {
             return;
         }
