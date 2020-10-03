@@ -6,12 +6,10 @@ using UnityEngine.Tilemaps;
 public class TowerPlacement : MonoBehaviour
 {
     //refereces
-    private Camera cam;
     private Grid grid;
     public TowerBehavior currentTower;
 
     //behavior
-    private bool isEnabled = true;
     private Vector2Int _lastMousePos;
 
     //tilemap stuff
@@ -22,21 +20,27 @@ public class TowerPlacement : MonoBehaviour
 
     private void Start()
     {
-        cam = Camera.main;
-        grid = new Grid(10, 10, new Vector2Int(-5, -5));
-        SetActive(true); //TEMP
+        grid = new Grid(64, 64, new Vector2Int(-32, -32));
+        // SetActive(true); //TEMP
     }
+
     private void Update()
     {
-        if (!isEnabled) return;
-        Vector2Int mousePos = Vector2Int.FloorToInt(cam.ScreenToWorldPoint(Input.mousePosition));
+        if (!currentTower)
+        {
+            return;
+        }
 
-        if(mousePos != _lastMousePos)
+        Vector2Int mousePos = Vector2Int.FloorToInt(
+            GameManager.Instance.Camera.ScreenToWorldPoint(Input.mousePosition)
+        );
+
+        if (mousePos != _lastMousePos)
         {
             UpdateTiles(mousePos);
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI())
         {
             TryPlaceBuilding(mousePos);
         }
@@ -87,16 +91,15 @@ public class TowerPlacement : MonoBehaviour
         }
     }
 
-    public void SetActive(bool state)
-    {
-        isEnabled = state;
-        if (state)
-        {
-            gridTilemap.enabled = true;
-        }
-        else
-        {
-            gridTilemap.enabled = false;
-        }
-    }
+    // public void SetActive(bool state)
+    // {
+    //     if (state)
+    //     {
+    //         gridTilemap.enabled = true;
+    //     }
+    //     else
+    //     {
+    //         gridTilemap.enabled = false;
+    //     }
+    // }
 }

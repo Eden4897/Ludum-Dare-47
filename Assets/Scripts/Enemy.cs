@@ -44,19 +44,19 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void Damage(float amout)
+    public void Damage(float amount)
     {
-        health -= amout;
+        health -= amount;
         if (health <= 0)
         {
             StopCoroutine(Move());
-            Destroy(gameObject);
+            EnemyManager.Instance.Despawn(this);
         }
     }
 
     public void OnFinish()
     {
         GameManager.Instance.Damage(damageToPlayer);
-        Destroy(gameObject);
+        EnemyManager.Instance.Despawn(this);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Utility : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class Utility : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -21,7 +22,7 @@ public class Utility : MonoBehaviour
     public static void Invoke(Action target, float timeout)
     {
         instance.StartCoroutine(instance.InvokeRoutine(target, timeout));
-    } 
+    }
 
     private IEnumerator InvokeRoutine(Action target, float timeout)
     {
@@ -34,5 +35,13 @@ public class Utility : MonoBehaviour
         {
             Debug.LogWarning("Lost reference to target action!");
         }
+    }
+
+    public static bool IsPointerOverUI()
+    {
+        EventSystem current = EventSystem.current;
+        return current.IsPointerOverGameObject()
+               && current.currentSelectedGameObject != null
+               && current.currentSelectedGameObject.GetComponent<CanvasRenderer>() != null;
     }
 }

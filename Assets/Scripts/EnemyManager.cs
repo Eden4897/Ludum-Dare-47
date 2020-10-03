@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -12,11 +11,9 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private List<Vector2> path;
 
-    private List<float> spawns;
+    [SerializeField] private Enemy manualSpawnEnemy;
 
-    [FormerlySerializedAs("enemy")] [SerializeField] private Enemy manualSpawnEnemy;
-
-    public List<Enemy> enemies;
+    public List<Enemy> spawnedEnemies;
 
     private void OnEnable()
     {
@@ -39,6 +36,12 @@ public class EnemyManager : MonoBehaviour
         Enemy newEnemy = Instantiate(enemyPrefab.gameObject, transform).GetComponent<Enemy>();
         newEnemy.path = path;
         newEnemy.StartCoroutine(newEnemy.Move());
-        enemies.Add(newEnemy);
+        spawnedEnemies.Add(newEnemy);
+    }
+
+    public void Despawn(Enemy spawnedEnemy)
+    {
+        spawnedEnemies.Remove(spawnedEnemy);
+        Destroy(spawnedEnemy.gameObject);
     }
 }

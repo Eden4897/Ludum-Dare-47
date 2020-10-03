@@ -2,7 +2,7 @@
 
 public class WaveRunner : MonoBehaviour
 {
-    [Header("Add Wave GameObjects as children")] [Space]
+    [Header("Add Wave GameObjects as children")]
     public EnemyManager enemyManager;
 
     public int currentWaveIndex;

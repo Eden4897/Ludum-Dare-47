@@ -120,7 +120,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640560378597402462}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -145,8 +145,9 @@ MonoBehaviour:
   - {x: -5, y: 3}
   - {x: 5, y: 3}
   - {x: 5, y: -5}
-  manualSpawnEnemy: {fileID: 0}
-  enemies: []
+  manualSpawnEnemy: {fileID: 2520283222451763666, guid: 7402801291bb92d4aa18c689ee79ae2f,
+    type: 3}
+  spawnedEnemies: []
 --- !u!1 &640560379480744741
 GameObject:
   m_ObjectHideFlags: 0
