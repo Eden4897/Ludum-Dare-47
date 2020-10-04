@@ -8,6 +8,8 @@ public class CrossbowTower : TowerBehavior
     {
         // Default values
         reloadInterval = 2;
+        shootOriginMagnitude = 1.4f;
+        shootOriginOffset = new Vector2(0, -0.2f);
     }
 
     protected override void OnShoot()

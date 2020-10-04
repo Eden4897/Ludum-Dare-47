@@ -15,6 +15,8 @@ public class TowerBehavior : MonoBehaviour
     //bullet shooting calculations
     private float _timeSinceLastShot = 0;
     public float reloadInterval = 1;
+    public float shootOriginMagnitude = 0.8f;
+    public Vector2 shootOriginOffset = Vector2.zero;
 
     //bullet info
     protected float bulletSpeed = 5;
@@ -108,6 +110,7 @@ public class TowerBehavior : MonoBehaviour
             transform.position + new Vector3(0.5f, -0.5f, 0),
             $"{(_playbackCoroutine == null ? "Recording" : "Re-playing")}:{recording.Aggregate("", (acc, x) => acc + $"\n{x.Key}: {x.Value}")}"
         );
+        Handles.DrawWireDisc((Vector2) transform.position + shootOriginOffset, Vector3.forward, shootOriginMagnitude);
     }
 #endif
 
@@ -121,7 +124,12 @@ public class TowerBehavior : MonoBehaviour
     {
         Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad));
 
-        GameObject newBullet = Instantiate(Bullet, (Vector2)transform.position + direction * 0.8f, Quaternion.identity, transform);
+        GameObject newBullet = Instantiate(
+            Bullet,
+            (Vector2) transform.position + shootOriginOffset + direction * shootOriginMagnitude,
+            Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.eulerAngles),
+            transform
+        );
         newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
 
         newBullet.GetComponent<Bullet>().damage = bulletDamage;

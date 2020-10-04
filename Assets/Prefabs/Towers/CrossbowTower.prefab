@@ -96,9 +96,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 969fc23c7011b6e44bad1b4183d6372d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Bullet: {fileID: 4895700047062342956, guid: f01cc5f6d024a044bbeeae1e8a2408d9, type: 3}
+  Bullet: {fileID: 4895700047062342956, guid: 351b7c99f9a45094db536b5ff37fcfa6, type: 3}
   Pointer: {fileID: 7576141078749629901}
   reloadInterval: 2
+  shootOriginMagnitude: 1.2
+  shootOriginOffset: {x: 0, y: -0.2}
   buildDuration: 0
   health: 10
   cost: 20
