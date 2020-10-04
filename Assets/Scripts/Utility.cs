@@ -7,7 +7,7 @@ public class Utility : MonoBehaviour
 {
     public static Utility instance;
 
-    private void Awake()
+    private void OnEnable()
     {
         if (instance == null)
         {
@@ -39,9 +39,6 @@ public class Utility : MonoBehaviour
 
     public static bool IsPointerOverUI()
     {
-        EventSystem current = EventSystem.current;
-        return current.IsPointerOverGameObject()
-               && current.currentSelectedGameObject != null
-               && current.currentSelectedGameObject.GetComponent<CanvasRenderer>() != null;
+        return EventSystem.current.IsPointerOverGameObject();
     }
 }
