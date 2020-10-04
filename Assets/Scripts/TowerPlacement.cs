@@ -9,6 +9,9 @@ public class TowerPlacement : MonoBehaviour
     private Grid grid;
     public TowerBehavior currentTower;
 
+    public bool IsRemovingTower { get; set; }
+    public UIAnimator LastUiAnimator { get; set; }
+
     //behavior
     private Vector2Int _lastMousePos;
 
@@ -94,7 +97,7 @@ public class TowerPlacement : MonoBehaviour
 
             currentTower.Build();
             currentTower = null;
-            SetActive(false);
+            LastUiAnimator.DeselectButton();
         }
     }
 
