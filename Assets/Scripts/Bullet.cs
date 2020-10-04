@@ -1,9 +1,18 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour
 {
     public float damage;
     private bool hasCollided = false;
+
+    private void Awake()
+    {
+        Assert.AreEqual(GetComponent<Rigidbody2D>().gravityScale, 0);
+        Assert.AreEqual(tag, "Bullets");
+        Assert.AreEqual(LayerMask.LayerToName(gameObject.layer), "Bullets");
+    }
 
     public void OnCollide()
     {

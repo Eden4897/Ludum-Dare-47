@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
 public class TowerBehavior : MonoBehaviour
@@ -19,9 +20,9 @@ public class TowerBehavior : MonoBehaviour
     public Vector2 shootOriginOffset = Vector2.zero;
 
     //bullet info
-    protected float bulletSpeed = 5;
-    protected float bulletLife = 1;
-    protected float bulletDamage = 1;
+    public float bulletSpeed = 5;
+    public float bulletLife = 1;
+    public float bulletDamage = 1;
 
     private float degrees;
     protected float recordingTimeFrame = 10;
@@ -41,10 +42,18 @@ public class TowerBehavior : MonoBehaviour
     public float health = 10;
     public int cost = 20;
 
-    public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
+    public List<Vector2Int> occupyingLocations = new List<Vector2Int>
+        {new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1)};
+
     public Vector2 centre;
     protected bool isEnabled = false;
     private Vector2Int _gridPosition;
+
+    private void Awake()
+    {
+        Assert.AreEqual(tag, "Towers");
+        Assert.AreEqual(LayerMask.LayerToName(gameObject.layer), "Towers");
+    }
 
     private void Start()
     {
@@ -122,12 +131,17 @@ public class TowerBehavior : MonoBehaviour
 
     protected virtual void Shoot()
     {
-        Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad));
+        Vector2 direction = Quaternion.Euler(0f, 0f, 90f)
+                            * new Vector2(Mathf.Cos(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad),
+                                Mathf.Sin(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad));
 
         GameObject newBullet = Instantiate(
             Bullet,
-            (Vector2) transform.position + shootOriginOffset + direction * shootOriginMagnitude,
-            Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.eulerAngles),
+            (Vector2) transform.position
+            + (Vector2) Bullet.transform.localPosition
+            + shootOriginOffset
+            + direction * shootOriginMagnitude,
+            Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.localEulerAngles),
             transform
         );
         newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;

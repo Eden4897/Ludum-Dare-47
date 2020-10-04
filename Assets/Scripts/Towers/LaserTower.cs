@@ -1,21 +1,21 @@
 ﻿using UnityEngine;
 
-public class CrossbowTower : TowerBehavior
+public class LaserTower : TowerBehavior
 {
-    public Animator crossbowAnimator;
+    public Animator laserAnimator;
 
-    private CrossbowTower()
+    public LaserTower()
     {
         // Default values
-        reloadInterval = 2;
-        shootOriginMagnitude = 1.4f;
-        shootOriginOffset = new Vector2(0, -0.2f);
+        reloadInterval = 0.5f;
+        shootOriginMagnitude = 0.8f;
+        shootOriginOffset = new Vector2(0, 0.65f);
     }
 
     protected override void OnShoot()
     {
         // laserAnimator.SetBool("Shoot", true);
         // Switching state directly instead of using variable, so that we can force animation to restart sooner
-        crossbowAnimator.Play("CrossbowShoot");
+        laserAnimator.Play("LaserAttack");
     }
 }
