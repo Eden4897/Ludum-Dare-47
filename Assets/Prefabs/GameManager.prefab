@@ -43,9 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f38164ec4b1848308e7e323a80cd30f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  mana: 0
+  loot: {fileID: 3998372885322947300, guid: cc56a721ce863c44d8f16cd4c91b2b25, type: 3}
   onGameOver:
     m_PersistentCalls:
       m_Calls: []
+  controlledTowers: []
   debug: 1

@@ -11,11 +11,10 @@ public class TowerBehavior : MonoBehaviour
     //references
     [SerializeField] protected GameObject Bullet;
     [SerializeField] protected GameObject Pointer;
-    protected Camera cam;
 
     //bullet shooting calculations
     private float _timeSinceLastShot = 0;
-    protected float reloadInterval = 1;
+    public float reloadInterval = 1;
 
     //bullet info
     protected float bulletSpeed = 5;
@@ -46,7 +45,6 @@ public class TowerBehavior : MonoBehaviour
 
     private void Start()
     {
-        cam = Camera.main;
         Pointer.SetActive(false);
 
         //cauculate centre mid point of stucture
@@ -80,7 +78,7 @@ public class TowerBehavior : MonoBehaviour
 
         if (isControlled)
         {
-            var mouseClick = cam.ScreenToWorldPoint(Input.mousePosition);
+            var mouseClick = GameManager.Instance.Camera.ScreenToWorldPoint(Input.mousePosition);
             FollowMouse(mouseClick);
 
             _timeSinceLastShot += Time.deltaTime;
@@ -102,6 +100,7 @@ public class TowerBehavior : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
         Handles.Label(
@@ -109,16 +108,17 @@ public class TowerBehavior : MonoBehaviour
             $"{(_playbackCoroutine == null ? "Recording" : "Re-playing")}:{recording.Aggregate("", (acc, x) => acc + $"\n{x.Key}: {x.Value}")}"
         );
     }
+#endif
 
     protected virtual void FollowMouse(Vector2 mouseWorldPos)
     {
         degrees = Mathf.Atan2(mouseWorldPos.x - transform.position.x, mouseWorldPos.y - transform.position.y) * Mathf.Rad2Deg;
-        Pointer.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, -degrees);
+        Pointer.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, -degrees);
     }
 
     protected virtual void Shoot()
     {
-        Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(Pointer.transform.eulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(Pointer.transform.eulerAngles.z * Mathf.Deg2Rad));
+        Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad));
 
         GameObject newBullet = Instantiate(Bullet, (Vector2)transform.position + direction * 0.8f, Quaternion.identity, transform);
         newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
@@ -130,6 +130,12 @@ public class TowerBehavior : MonoBehaviour
             newBullet.GetComponent<Bullet>().OnCollide(); 
         }, 
         bulletLife);
+
+        OnShoot();
+    }
+
+    protected virtual void OnShoot()
+    {
     }
 
     public void LoseControl()
@@ -137,7 +143,7 @@ public class TowerBehavior : MonoBehaviour
         // Represent the ending of recording as a last entry
         recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
             Time.time,
-            new Tuple<Vector2, float>(cam.ScreenToWorldPoint(Input.mousePosition), -degrees)
+            new Tuple<Vector2, float>(GameManager.Instance.Camera.ScreenToWorldPoint(Input.mousePosition), -degrees)
         ));
         isControlled = false;
 
@@ -173,7 +179,7 @@ public class TowerBehavior : MonoBehaviour
         //Assert.IsFalse(recording.Any());
         recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
             Time.time,
-            new Tuple<Vector2, float>(cam.ScreenToWorldPoint(Input.mousePosition), -degrees)
+            new Tuple<Vector2, float>(GameManager.Instance.Camera.ScreenToWorldPoint(Input.mousePosition), -degrees)
         ));
         GameManager.Instance.controlledTowers.Add(this);
         OnGainControl();
@@ -193,7 +199,7 @@ public class TowerBehavior : MonoBehaviour
             for (int i = 1; i < recording.Count; ++i)
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
-                float startDegrees = Pointer.transform.eulerAngles.z;
+                float startDegrees = Pointer.transform.localEulerAngles.z;
                 // Avoid rotating for more than 180 degrees (by modifying the recording rotation values, bit redundant)
                 while (recording[i].Value.Item2 - startDegrees >= 180)
                 {
@@ -218,11 +224,11 @@ public class TowerBehavior : MonoBehaviour
                     var partialDegrees = startDegrees + (recording[i].Value.Item2 - startDegrees)
                         * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
                            / (recording[i].Key - recording[i - 1].Key));
-                    Pointer.transform.eulerAngles = new Vector3(0f, 0f, partialDegrees);
+                    Pointer.transform.localEulerAngles = new Vector3(0f, 0f, partialDegrees);
                     yield return null;
                 }
 
-                Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value.Item2);
+                Pointer.transform.localEulerAngles = new Vector3(0f, 0f, recording[i].Value.Item2);
                 if (i != recording.Count - 1)
                 {
                     Shoot();
