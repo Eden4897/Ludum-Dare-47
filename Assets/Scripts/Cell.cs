@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cell
+public struct Cell
 {
     private int x;
     private int y;
@@ -10,14 +10,15 @@ public class Cell
     public Vector2Int positon
     {
         get { return new Vector2Int(x, y); }
-        set { x = value.x; y = value.y; }
+        private set { x = value.x; y = value.y; }
     }
 
-    public bool occupied = false;
+    public bool occupied;
 
     public Cell (int x, int y)
     {
         this.x = x;
         this.y = y;
+        occupied = false;
     }
 }

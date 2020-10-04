@@ -1,12 +1,17 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class TowerPlacement : MonoBehaviour
 {
+    private static TowerPlacement _instance;
+
+    public static TowerPlacement Instance => (_instance ? _instance : _instance = FindObjectOfType<TowerPlacement>())
+                                             ?? throw new Exception("Please add TowerPlacement to the scene");
+
     //refereces
-    private Grid grid;
+    public Grid Grid { get; set; }
     public TowerBehavior currentTower;
 
     public bool IsRemovingTower { get; set; }
@@ -23,7 +28,8 @@ public class TowerPlacement : MonoBehaviour
 
     private void Start()
     {
-        grid = new Grid(64, 64, new Vector2Int(-32, -32));
+        _instance = this;
+        Grid = new Grid(64, 64, new Vector2Int(-32, -32));
     }
 
     private void Update()
@@ -59,7 +65,7 @@ public class TowerPlacement : MonoBehaviour
         foreach (Vector2Int occupyingLocation in currentTower.occupyingLocations)
         {
             Vector2Int target = new Vector2Int(pos.x + occupyingLocation.x, pos.y + occupyingLocation.y);
-            if (grid.GetCell(target).occupied)
+            if (Grid.GetCell(target).occupied)
             {
                 gridTilemap.SetTile((Vector3Int)target, occupiedTile);
             }
@@ -68,7 +74,7 @@ public class TowerPlacement : MonoBehaviour
                 gridTilemap.SetTile((Vector3Int)target, freeTile);
             }
         }
-        currentTower.SetPosition(pos);
+        currentTower.SetGridPosition(pos);
     }
     
     private void TryPlaceBuilding(Vector2Int pos)
@@ -76,7 +82,7 @@ public class TowerPlacement : MonoBehaviour
         bool isBuildingPlacable = true;
         foreach (Vector2Int occupyingLocation in currentTower.occupyingLocations)
         {
-            if (grid.GetCell(pos + occupyingLocation).occupied)
+            if (Grid.GetCell(pos + occupyingLocation).occupied)
             {
                 isBuildingPlacable = false;
             }
@@ -86,7 +92,7 @@ public class TowerPlacement : MonoBehaviour
         {
             foreach (Vector2Int occupyingLocation in currentTower.occupyingLocations)
             {
-                grid.GetCell(pos + occupyingLocation).occupied = true;
+                Grid.GetCell(pos + occupyingLocation).occupied = true;
             }
 
             // Transfer control to a new tower

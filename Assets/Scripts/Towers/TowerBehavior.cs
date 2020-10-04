@@ -42,6 +42,7 @@ public class TowerBehavior : MonoBehaviour
     public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
     public Vector2 centre;
     protected bool isEnabled = false;
+    private Vector2Int _gridPosition;
 
     private void Start()
     {
@@ -220,7 +221,6 @@ public class TowerBehavior : MonoBehaviour
                 while (playbackTime <= playbackNextTarget)
                 {
                     playbackTime += Time.deltaTime;
-                    // TODO: wrap to limit a single rotation by a maximum of 180 degrees
                     var partialDegrees = startDegrees + (recording[i].Value.Item2 - startDegrees)
                         * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
                            / (recording[i].Key - recording[i - 1].Key));
@@ -244,33 +244,49 @@ public class TowerBehavior : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
-            StopCoroutine(_playbackCoroutine);
-            _playbackCoroutine = null;
-            //play some sounds
-            if (isControlled)
-            {
-                // Unregister from the list of controlled towers
-                LoseControl();
-                // TODO: what to do if user doesn't control any towers?
-            }
-
-            int lootAmount = Mathf.FloorToInt(cost / 2f);
-            for (int i = 0; i < lootAmount; i++)
-            {
-                Rigidbody2D newObj = Instantiate(GameManager.Instance.loot, transform.position, Quaternion.identity).GetComponent<Rigidbody2D>();
-
-                Vector3 force = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
-                newObj.AddForce(force.normalized * 100);
-            }
-            Destroy(gameObject);
+            DestroyTower();
         }
     }
 
+    public void DestroyTower()
+    {
+        //play some sounds
+        if (isControlled)
+        {
+            // Unregister from the list of controlled towers
+            LoseControl();
+            // TODO: what to do if user doesn't control any towers?
+        }
+        else if (_playbackCoroutine != null)
+        {
+            // _playbackCoroutine may be already null after a code hot-swap
+            StopCoroutine(_playbackCoroutine);
+            _playbackCoroutine = null;
+        }
+
+        int lootAmount = Mathf.FloorToInt(cost / 2f);
+        for (int i = 0; i < lootAmount; i++)
+        {
+            Rigidbody2D newObj = Instantiate(GameManager.Instance.loot, transform.position, Quaternion.identity)
+                .GetComponent<Rigidbody2D>();
+
+            Vector3 force = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            newObj.AddForce(force.normalized * 100);
+        }
+
+        foreach (Vector2Int occupyingLocation in occupyingLocations)
+        {
+            TowerPlacement.Instance.Grid.GetCell(_gridPosition + occupyingLocation).occupied = false;
+        }
+        Destroy(gameObject);
+    }
+
     //Set position based on its LeftBottom corner
-    public void SetPosition(Vector2 pos)
+    public void SetGridPosition(Vector2Int pos)
     {
         //move the object
         transform.position = pos + centre;
+        _gridPosition = pos;
     }
 
     public void Build()
@@ -286,5 +302,13 @@ public class TowerBehavior : MonoBehaviour
         yield return new WaitForSeconds(buildDuration);
         isEnabled = true;
         Pointer.SetActive(true);
+    }
+
+    private void OnMouseDown()
+    {
+        if (TowerPlacement.Instance.IsRemovingTower)
+        {
+            DestroyTower();
+        }
     }
 }

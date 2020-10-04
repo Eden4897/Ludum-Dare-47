@@ -1,36 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid
+public struct Grid
 {
-    public List<Cell> cells;
+    // TODO: refactor to 1D array to support serialization
+    // https://forum.unity.com/threads/how-do-i-get-multidimensional-arrays-to-persist.82038/
+    private Cell[][] cells;
+    private Vector2Int _origin;
 
     public Grid(int width, int height, Vector2Int origin)
     {
-        cells = new List<Cell>();
-        for (int y = 0; y < height; ++y)
+        _origin = origin;
+        cells = new Cell[width][];
+        for (int x = 0; x < width; ++x)
         {
-            for (int x = 0; x < width; ++x)
+            cells[x] = new Cell[height];
+            for (int y = 0; y < height; ++y)
             {
-                cells.Add(new Cell(origin.x + x, origin.y + y));
+                cells[x][y] = new Cell(origin.x + x, origin.y + y);
             }
         }
     }
 
-    public Cell GetCell(int x, int y)
+    public ref Cell GetCell(int x, int y)
     {
-        return GetCell(new Vector2Int(x, y));
+        return ref cells[x - _origin.x][y - _origin.y];
     }
-    public Cell GetCell(Vector2Int position)
+
+    public ref Cell GetCell(Vector2Int position)
     {
-        foreach (Cell cell in cells)
-        {
-            if(cell.positon == position)
-            {
-                return cell;
-            }
-        }
-        return null;
+        return ref GetCell(position.x, position.y);
     }
 }
