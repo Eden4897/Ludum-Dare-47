@@ -11,8 +11,9 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     // Configuration
+    protected float initialSpeed = 1;
     protected float speed = 1;
-    protected float health = 1;
+    protected float health = 2;
     protected int minManaDrop = 2;
     protected int maxManaDrop = 4;
     [SerializeField] protected GameObject loot;
@@ -25,6 +26,7 @@ public class Enemy : MonoBehaviour
     private Collider2D _collider;
     private SpriteRenderer _spriteRenderer;
     private int _nextPathIndex;
+    private IEnumerator _speedCoroutine;
 
     //public float Speed =>
     //    statuses.Aggregate(speed, (acc, modifier) => acc * modifier.speedMultiplier);
@@ -46,6 +48,28 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
+    }
+
+    public void ApplySpeedMultiplier(float multiplier, float duration)
+    {
+        _spriteRenderer.color = multiplier < 0.1f
+            ? new Color(0.25f, 0.25f, 1)
+            : new Color(0.2f, 1, 0.12f);
+        speed = initialSpeed * multiplier;
+        if (_speedCoroutine != null)
+        {
+            StopCoroutine(_speedCoroutine);
+        }
+
+        _speedCoroutine = ReturnInitialSpeed(duration);
+        StartCoroutine(_speedCoroutine);
+    }
+
+    IEnumerator ReturnInitialSpeed(float afterDuration)
+    {
+        yield return new WaitForSeconds(afterDuration);
+        speed = initialSpeed;
+        _spriteRenderer.color = Color.white;
     }
 
     public IEnumerator Move()
@@ -98,6 +122,7 @@ public class Enemy : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
+        // TODO: exceptions when opened directly in Prefab mode without being spawned
         Gizmos.color = Color.red;
         Gizmos.DrawLine(transform.position, path[_nextPathIndex]);
         for (var index = _nextPathIndex; index + 1 < path.Count; index++)

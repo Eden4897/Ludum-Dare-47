@@ -7,6 +7,12 @@ public class Bullet : MonoBehaviour
     public float damage;
     private bool hasCollided = false;
 
+    public bool appliesSlow;
+
+    public bool appliesFreeze;
+    // TODO: explosion
+    //public bool impactExplosion;
+
     private void Awake()
     {
         Assert.AreEqual(GetComponent<Rigidbody2D>().gravityScale, 0);
@@ -25,7 +31,18 @@ public class Bullet : MonoBehaviour
         if (other.collider.CompareTag("Enemies"))
         {
             hasCollided = true;
-            other.collider.GetComponent<Enemy>().Damage(damage);
+            var enemy = other.collider.GetComponent<Enemy>();
+            if (appliesSlow)
+            {
+                enemy.ApplySpeedMultiplier(0.6f, 5f);
+            }
+
+            if (appliesFreeze)
+            {
+                enemy.ApplySpeedMultiplier(0, 2f);
+            }
+
+            enemy.Damage(damage);
             Destroy(gameObject);
         }
         else if (other.collider.CompareTag("Towers"))
