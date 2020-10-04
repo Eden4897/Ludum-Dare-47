@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour
     // Configuration
     public float initialSpeed = 1;
     public float initialHealth = 1;
-    public float initialDamageToPlayer = 10;
     public List<EnemyLoot> lootTable = new List<EnemyLoot>();
 
     // Runtime variables
@@ -28,9 +27,6 @@ public class Enemy : MonoBehaviour
 
     public float MaxHealth =>
         statuses.Aggregate(initialHealth, (acc, modifier) => acc * modifier.healthMultiplier);
-
-    public float DamageToPlayer =>
-        statuses.Aggregate(initialDamageToPlayer, (acc, modifier) => acc * modifier.damageMultiplier);
 
     public Color Color =>
         statuses.Aggregate(_spriteRenderer.color, (acc, modifier) => acc * modifier.colorEffect);
@@ -116,7 +112,7 @@ public class Enemy : MonoBehaviour
 
     public void OnFinish()
     {
-        GameManager.Instance.Damage((int) DamageToPlayer);
+        GameManager.Instance.Damage(1);
         EnemyManager.Instance.Despawn(this);
     }
 }

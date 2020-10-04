@@ -22,21 +22,21 @@ public class TowerBehavior : MonoBehaviour
     protected float bulletDamage = 1;
 
     //recording
-    private float degrees;
-    protected float recordingTimeFrame = 10;
-    protected bool isControlled;
-    private IEnumerator _playbackCoroutine;
-
     /// <summary>
     /// Key is a time since game started, value is a rotation at the moment of shooting.
     /// There are two special exceptions, which don't represent a moment of shooting:
     /// First entry represents the time when recording started, and the last entry when it ended.
     /// </summary>
     protected List<KeyValuePair<float, float>> recording = new List<KeyValuePair<float, float>>();
-
+    private float degrees;
+    protected float recordingTimeFrame = 10;
+    protected bool isControlled;
+    private IEnumerator _playbackCoroutine;
+    
     //bahavior
     public float buildDuration = 0f;
     protected float health = 10;
+    public int cost = 20;
 
     public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
     public Vector2 centre;
