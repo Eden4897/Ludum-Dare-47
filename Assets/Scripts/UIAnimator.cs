@@ -8,15 +8,10 @@ public class UIAnimator : MonoBehaviour
     [SerializeField] private TowerBehavior towerPrefab;
     [SerializeField] private TextMeshProUGUI costText;
 
-    private int towerCost;
-    private void Start()
-    {
-        towerCost = towerPrefab.cost;
-    }
     public void OnManaChanged()
     {
-        costText.text = $"{GameManager.Instance.Mana}/{towerCost}";
-        if(GameManager.Instance.Mana >= towerCost)
+        costText.text = $"{GameManager.Instance.Mana}/{towerPrefab.cost}";
+        if(GameManager.Instance.Mana >= towerPrefab.cost)
         {
             costText.color = Color.green;
         }
