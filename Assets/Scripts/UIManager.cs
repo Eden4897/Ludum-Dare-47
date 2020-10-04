@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -10,6 +12,11 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TowerPlacement towerPlacement;
     [SerializeField] private TowerBehavior towerPrefab;
+    [SerializeField] private TextMeshProUGUI healthText;
+    [SerializeField] private TextMeshProUGUI manaText;
+    [SerializeField] private TextMeshProUGUI waveText;
+
+    [SerializeField] private List<UIAnimator> UIAnimators;
 
     public bool InteractionBusy => towerPlacement.currentTower != null;
 
@@ -45,5 +52,24 @@ public class UIManager : MonoBehaviour
 
         towerPlacement.SetActive(true);
         towerPlacement.currentTower = Instantiate(towerPrefab).GetComponent<TowerBehavior>();
+    }
+
+    public void OnManaChange()
+    {
+        manaText.text = GameManager.Instance.Mana.ToString("00000");
+        foreach (var UIAnimator in UIAnimators)
+        {
+            UIAnimator.OnManaChanged();
+        }
+    }
+
+    public void OnHealthChange()
+    {
+        healthText.text = GameManager.Instance.Health.ToString("00");
+    }
+
+    public void OnWaveChange()
+    {
+        waveText.text = GameManager.Instance.Wave.ToString("00");
     }
 }

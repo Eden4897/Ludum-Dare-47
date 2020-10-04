@@ -12,8 +12,28 @@ public class GameManager : MonoBehaviour
 
     public Camera Camera { get; private set; }
 
-    public int health = 100;
-    public int mana = 0;
+    private int health = 20;
+    private int mana = 100;
+    private int wave = 1;
+
+    public int Health
+    {
+        get { return health; }
+        set { health = value; UIManager.Instance.OnHealthChange(); }
+    }
+
+    public int Mana
+    {
+        get { return mana; }
+        set { mana = value; UIManager.Instance.OnManaChange(); }
+    }
+
+    public int Wave
+    {
+        get { return wave; }
+        set { wave = value; UIManager.Instance.OnWaveChange(); }
+    }
+
     public UnityEvent onGameOver;
     public List<TowerBehavior> controlledTowers;
     public bool debug;
@@ -21,6 +41,9 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Camera = Camera.main;
+        UIManager.Instance.OnHealthChange();
+        UIManager.Instance.OnManaChange();
+        UIManager.Instance.OnWaveChange();
     }
 
     private void OnEnable()
@@ -40,10 +63,10 @@ public class GameManager : MonoBehaviour
 
     public void Damage(int damageToPlayer)
     {
-        health -= damageToPlayer;
-        if (health <= 0)
+        Health -= damageToPlayer;
+        if (Health <= 0)
         {
-            health = 0;
+            Health = 0;
             OnGameOver();
         }
     }

@@ -44,3 +44,18 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 979892271
+    locked: 0
+  - name: Mana
+    uniqueID: 3785046757
+    locked: 0
+  - name: Enemies
+    uniqueID: 3000153355
+    locked: 0
+  - name: Bullets
+    uniqueID: 4057678293
+    locked: 0
+  - name: Towers
+    uniqueID: 2883670607
+    locked: 0

@@ -40,7 +40,7 @@ public class EnemyLoot : MonoBehaviour
     // TODO: call
     public void OnClick()
     {
-        GameManager.Instance.mana += manaValue;
+        GameManager.Instance.Mana += manaValue;
         StopCoroutine(despawnCoroutine);
         Destroy(gameObject);
     }
