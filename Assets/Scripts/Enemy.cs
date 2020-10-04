@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(BoxCollider2D))]
@@ -15,6 +16,7 @@ public class Enemy : MonoBehaviour
     protected int minManaDrop = 2;
     protected int maxManaDrop = 4;
     [SerializeField] protected GameObject loot;
+    public List<Vector2> path = new List<Vector2>();
 
     // Runtime variables
     [SerializeField] private List<EnemyStatus> statuses = new List<EnemyStatus>();
@@ -22,6 +24,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
     private SpriteRenderer _spriteRenderer;
+    private int _nextPathIndex;
 
     //public float Speed =>
     //    statuses.Aggregate(speed, (acc, modifier) => acc * modifier.speedMultiplier);
@@ -37,32 +40,30 @@ public class Enemy : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        //Assert.IsTrue(_rigidbody.isKinematic);
-        Assert.IsTrue(_collider.isTrigger);
+        Assert.IsFalse(_rigidbody.isKinematic);
+        Assert.IsFalse(_collider.isTrigger);
     }
 
     private void Start()
     {
     }
 
-    public List<Vector2> path = new List<Vector2>();
-    private float _t = 0;
-
     public IEnumerator Move()
     {
-        for (int i = 1; i < path.Count; ++i)
+        for (_nextPathIndex = 1; _nextPathIndex < path.Count; ++_nextPathIndex)
         {
-            Vector2 start = path[i - 1];
-            Vector2 end = path[i];
-            _t = 0;
-            float distance = Vector2.Distance(start, end);
-            while ((Vector2) transform.position != end)
+            Vector2 vectorTowardsEnd;
+            do
             {
-                _t += Time.deltaTime;
-                transform.position = Vector2.Lerp(start, end, _t / distance * speed);
+                vectorTowardsEnd = path[_nextPathIndex] - (Vector2) transform.position;
+                _rigidbody.velocity = vectorTowardsEnd.normalized * speed;
+                // Also slowly return the rotation back to a default angle if it changes
+                _rigidbody.rotation = Mathf.Lerp(_rigidbody.rotation, 0, 0.05f);
                 yield return null;
-            }
+            } while (vectorTowardsEnd.sqrMagnitude > 0.1f);
         }
+
+        Debug.LogError($"{name} reached the last waypoint without triggering a Finish Line! Unstable state");
     }
 
     public void Damage(float amount)
@@ -93,5 +94,15 @@ public class Enemy : MonoBehaviour
     {
         GameManager.Instance.Damage(1);
         EnemyManager.Instance.Despawn(this);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, path[_nextPathIndex]);
+        for (var index = _nextPathIndex; index + 1 < path.Count; index++)
+        {
+            Gizmos.DrawLine(path[index], path[index + 1]);
+        }
     }
 }

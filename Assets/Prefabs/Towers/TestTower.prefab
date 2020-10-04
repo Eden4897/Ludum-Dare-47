@@ -46,6 +46,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -93,7 +94,7 @@ GameObject:
   - component: {fileID: 418287506055651244}
   - component: {fileID: 418287506055651243}
   - component: {fileID: 418287506055651246}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TestTower
   m_TagString: Towers
   m_Icon: {fileID: 0}
@@ -130,6 +131,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -180,6 +182,7 @@ MonoBehaviour:
   Bullet: {fileID: 4895700047062342956, guid: f01cc5f6d024a044bbeeae1e8a2408d9, type: 3}
   Pointer: {fileID: 418287506399484152}
   buildDuration: 1
+  cost: 20
   occupyingLocations:
   - {x: 0, y: 0}
   - {x: 0, y: 1}

@@ -35,7 +35,7 @@ public class TowerBehavior : MonoBehaviour
     
     //bahavior
     public float buildDuration = 0f;
-    protected float health = 10;
+    public float health = 10;
     public int cost = 20;
 
     public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
@@ -211,6 +211,13 @@ public class TowerBehavior : MonoBehaviour
         {
             StopCoroutine(_playbackCoroutine);
             _playbackCoroutine = null;
+            //play some sounds
+            if (isControlled)
+            {
+                // Unregister from the list of controlled towers
+                LoseControl();
+                // TODO: what to do if user doesn't control any towers?
+            }
 
             int lootAmount = Mathf.FloorToInt(cost / 2f);
             for (int i = 0; i < lootAmount; i++)
