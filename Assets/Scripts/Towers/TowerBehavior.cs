@@ -35,8 +35,9 @@ public class TowerBehavior : MonoBehaviour
     protected List<KeyValuePair<float, float>> recording = new List<KeyValuePair<float, float>>();
 
     //bahavior
-    public float buildDuration = 1f;
+    public float buildDuration = 0f;
     protected float health = 10;
+
     public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
     public Vector2 centre;
     protected bool isEnabled = false;
@@ -45,8 +46,22 @@ public class TowerBehavior : MonoBehaviour
     {
         cam = Camera.main;
         Pointer.SetActive(false);
-        // TODO: maybe need to do in Build() instead?
-        centre = occupyingLocations[occupyingLocations.Count - 1] + new Vector2Int(1, 1) - occupyingLocations[0];
+
+        //cauculate centre mid point of stucture
+        Vector2 _max = new Vector2(0, 0);
+        foreach (Vector2Int occupyingLocation in occupyingLocations)
+        {
+            if (occupyingLocation.x > _max.x)
+            {
+                _max.x = occupyingLocation.x;
+            }
+            if (occupyingLocation.y > _max.y)
+            {
+                _max.y = occupyingLocation.y;
+            }
+        }
+        _max += new Vector2(1, 1);
+        centre = _max / 2f;
     }
 
     private void Update()
@@ -67,18 +82,13 @@ public class TowerBehavior : MonoBehaviour
 
             _timeSinceLastShot += Time.deltaTime;
             if (Input.GetMouseButton(0)
-                && !UI.Instance.InteractionBusy
+                && !UIManager.Instance.InteractionBusy
                 && !Utility.IsPointerOverUI()
-                && _timeSinceLastShot >= reloadInterval)
+                && _timeSinceLastShot >= reloadInterval) //if finish reloading
             {
                 _timeSinceLastShot = 0;
                 Shoot();
                 recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
-                // TODO: is the following code correct?
-                if (recording[0].Key <= Time.time - 10)
-                {
-                    recording.RemoveAt(0);
-                }
             }
         }
         else
@@ -104,7 +114,7 @@ public class TowerBehavior : MonoBehaviour
     {
         Vector2 direction = Quaternion.Euler(0f,0f,90f) * new Vector2(Mathf.Cos(Pointer.transform.eulerAngles.z * Mathf.Deg2Rad) , Mathf.Sin(Pointer.transform.eulerAngles.z * Mathf.Deg2Rad));
 
-        GameObject newBullet = Instantiate(Bullet, (Vector2)transform.position + direction * 0.8f, Quaternion.identity);
+        GameObject newBullet = Instantiate(Bullet, (Vector2)transform.position + direction * 0.8f, Quaternion.identity, transform);
         newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
 
         newBullet.GetComponent<Bullet>().damage = bulletDamage;
@@ -151,7 +161,7 @@ public class TowerBehavior : MonoBehaviour
 
         _playbackCoroutine = null;
         // Represent the beginning of recording as a first entry
-        Assert.IsFalse(recording.Any());
+        //Assert.IsFalse(recording.Any());
         recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
         GameManager.Instance.controlledTowers.Add(this);
         OnGainControl();
@@ -165,6 +175,7 @@ public class TowerBehavior : MonoBehaviour
     {
         while (true)
         {
+            if (recording.Count <= 2) break;
             float playbackTime = 0;
             // Skip first entry which represents start time, and don't shoot during last entry
             for (int i = 1; i < recording.Count; ++i)
@@ -188,6 +199,8 @@ public class TowerBehavior : MonoBehaviour
                     Shoot();
                 }
             }
+            //just in case something happens
+            yield return null;
         }
     }
 
@@ -203,26 +216,11 @@ public class TowerBehavior : MonoBehaviour
         }
     }
 
+    //Set position based on its LeftBottom corner
     public void SetPosition(Vector2 pos)
     {
-        //cauculate centre mid point of stucture
-        Vector2 _max = new Vector2(0, 0);
-        foreach (Vector2Int occupyingLocation in occupyingLocations)
-        {
-            if (occupyingLocation.x > _max.x)
-            {
-                _max.x = occupyingLocation.x;
-            }
-            if (occupyingLocation.y > _max.y)
-            {
-                _max.y = occupyingLocation.y;
-            }
-        }
-        _max += new Vector2(1, 1);
-        Vector2 target = pos + _max / 2f;
-
         //move the object
-        transform.position = target;
+        transform.position = pos + centre;
     }
 
     public void Build()

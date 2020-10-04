@@ -1,15 +1,15 @@
 ﻿using System;
 using UnityEngine;
 
-public class UI : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-    private static UI _instance;
+    private static UIManager _instance;
 
-    public static UI Instance => (_instance ? _instance : _instance = FindObjectOfType<UI>())
+    public static UIManager Instance => (_instance ? _instance : _instance = FindObjectOfType<UIManager>())
                                  ?? throw new Exception("Please add UI to the scene");
 
-    public TowerPlacement towerPlacement;
-    public TowerBehavior towerPrefab;
+    [SerializeField] private TowerPlacement towerPlacement;
+    [SerializeField] private TowerBehavior towerPrefab;
 
     public bool InteractionBusy => towerPlacement.currentTower != null;
 
@@ -43,6 +43,7 @@ public class UI : MonoBehaviour
             throw new Exception("Tower is already being placed");
         }
 
+        towerPlacement.SetActive(true);
         towerPlacement.currentTower = Instantiate(towerPrefab).GetComponent<TowerBehavior>();
     }
 }

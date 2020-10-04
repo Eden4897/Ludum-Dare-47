@@ -21,7 +21,6 @@ public class TowerPlacement : MonoBehaviour
     private void Start()
     {
         grid = new Grid(64, 64, new Vector2Int(-32, -32));
-        // SetActive(true); //TEMP
     }
 
     private void Update()
@@ -40,7 +39,7 @@ public class TowerPlacement : MonoBehaviour
             UpdateTiles(mousePos);
         }
 
-        if (Input.GetMouseButtonDown(0) && !Utility.IsPointerOverUI())
+        if (Input.GetMouseButtonDown(1) && !Utility.IsPointerOverUI())
         {
             TryPlaceBuilding(mousePos);
         }
@@ -80,7 +79,7 @@ public class TowerPlacement : MonoBehaviour
             }
         }
         if (!isBuildingPlacable) return;
-        else
+        else //if building is placable
         {
             foreach (Vector2Int occupyingLocation in currentTower.occupyingLocations)
             {
@@ -95,18 +94,19 @@ public class TowerPlacement : MonoBehaviour
 
             currentTower.Build();
             currentTower = null;
+            SetActive(false);
         }
     }
 
-    // public void SetActive(bool state)
-    // {
-    //     if (state)
-    //     {
-    //         gridTilemap.enabled = true;
-    //     }
-    //     else
-    //     {
-    //         gridTilemap.enabled = false;
-    //     }
-    // }
+    public void SetActive(bool state)
+    {
+        if (state)
+        {
+            gridTilemap.gameObject.SetActive(true);
+        }
+        else
+        {
+            gridTilemap.gameObject.SetActive(false);
+        }
+    }
 }

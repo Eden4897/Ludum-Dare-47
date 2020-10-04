@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public Camera Camera { get; private set; }
 
     public int health = 100;
-    public int mana;
+    public int mana = 0;
     public UnityEvent onGameOver;
     public List<TowerBehavior> controlledTowers;
     public bool debug;
