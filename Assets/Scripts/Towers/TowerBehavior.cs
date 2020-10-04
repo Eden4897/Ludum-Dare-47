@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Assertions;
+using Random = UnityEngine.Random;
 
 public class TowerBehavior : MonoBehaviour
 {
@@ -22,18 +22,19 @@ public class TowerBehavior : MonoBehaviour
     protected float bulletLife = 1;
     protected float bulletDamage = 1;
 
-    //recording
-    /// <summary>
-    /// Key is a time since game started, value is a rotation at the moment of shooting.
-    /// There are two special exceptions, which don't represent a moment of shooting:
-    /// First entry represents the time when recording started, and the last entry when it ended.
-    /// </summary>
-    protected List<KeyValuePair<float, Tuple<float, Vector2>>> recording = new List<KeyValuePair<float, Tuple<float, Vector2>>>();
     private float degrees;
     protected float recordingTimeFrame = 10;
     protected bool isControlled;
     private IEnumerator _playbackCoroutine;
-    
+
+    /// <summary>
+    /// Key is a time since game started, value is a shooting target, and a rotation at the moment of shooting.
+    /// There are two special exceptions, which don't represent a moment of shooting:
+    /// First entry represents the time when recording started, and the last entry when it ended.
+    /// </summary>
+    protected List<KeyValuePair<float, Tuple<Vector2, float>>> recording =
+        new List<KeyValuePair<float, Tuple<Vector2, float>>>();
+
     //bahavior
     public float buildDuration = 0f;
     public float health = 10;
@@ -79,7 +80,8 @@ public class TowerBehavior : MonoBehaviour
 
         if (isControlled)
         {
-            FollowMouse(cam.ScreenToWorldPoint(Input.mousePosition));
+            var mouseClick = cam.ScreenToWorldPoint(Input.mousePosition);
+            FollowMouse(mouseClick);
 
             _timeSinceLastShot += Time.deltaTime;
             if (Input.GetMouseButton(0)
@@ -89,7 +91,10 @@ public class TowerBehavior : MonoBehaviour
             {
                 _timeSinceLastShot = 0;
                 Shoot();
-                recording.Add(new KeyValuePair<float, Tuple<float, Vector2>>(Time.time, new Tuple<float, Vector2>(-degrees, cam.ScreenToWorldPoint(Input.mousePosition))));
+                recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
+                    Time.time,
+                    new Tuple<Vector2, float>(mouseClick, -degrees)
+                ));
             }
         }
         else
@@ -130,7 +135,10 @@ public class TowerBehavior : MonoBehaviour
     public void LoseControl()
     {
         // Represent the ending of recording as a last entry
-        recording.Add(new KeyValuePair<float, Tuple<float, Vector2>>(Time.time, new Tuple<float, Vector2>(-degrees, cam.ScreenToWorldPoint(Input.mousePosition))));
+        recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
+            Time.time,
+            new Tuple<Vector2, float>(cam.ScreenToWorldPoint(Input.mousePosition), -degrees)
+        ));
         isControlled = false;
 
         //clean recording
@@ -163,7 +171,10 @@ public class TowerBehavior : MonoBehaviour
         _playbackCoroutine = null;
         // Represent the beginning of recording as a first entry
         //Assert.IsFalse(recording.Any());
-        recording.Add(new KeyValuePair<float, Tuple<float, Vector2>>(Time.time, new Tuple<float, Vector2>(-degrees, cam.ScreenToWorldPoint(Input.mousePosition))));
+        recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
+            Time.time,
+            new Tuple<Vector2, float>(cam.ScreenToWorldPoint(Input.mousePosition), -degrees)
+        ));
         GameManager.Instance.controlledTowers.Add(this);
         OnGainControl();
     }
@@ -183,18 +194,35 @@ public class TowerBehavior : MonoBehaviour
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
                 float startDegrees = Pointer.transform.eulerAngles.z;
+                // Avoid rotating for more than 180 degrees (by modifying the recording rotation values, bit redundant)
+                while (recording[i].Value.Item2 - startDegrees >= 180)
+                {
+                    recording[i] = new KeyValuePair<float, Tuple<Vector2, float>>(
+                        recording[i].Key,
+                        new Tuple<Vector2, float>(recording[i].Value.Item1, recording[i].Value.Item2 - 360)
+                    );
+                }
+
+                while (recording[i].Value.Item2 - startDegrees <= -180)
+                {
+                    recording[i] = new KeyValuePair<float, Tuple<Vector2, float>>(
+                        recording[i].Key,
+                        new Tuple<Vector2, float>(recording[i].Value.Item1, recording[i].Value.Item2 + 360)
+                    );
+                }
+
                 while (playbackTime <= playbackNextTarget)
                 {
                     playbackTime += Time.deltaTime;
                     // TODO: wrap to limit a single rotation by a maximum of 180 degrees
-                    var partialDegrees = startDegrees + (recording[i].Value.Item1 - startDegrees)
+                    var partialDegrees = startDegrees + (recording[i].Value.Item2 - startDegrees)
                         * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
                            / (recording[i].Key - recording[i - 1].Key));
                     Pointer.transform.eulerAngles = new Vector3(0f, 0f, partialDegrees);
                     yield return null;
                 }
 
-                Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value.Item1);
+                Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value.Item2);
                 if (i != recording.Count - 1)
                 {
                     Shoot();
@@ -225,7 +253,7 @@ public class TowerBehavior : MonoBehaviour
             {
                 Rigidbody2D newObj = Instantiate(GameManager.Instance.loot, transform.position, Quaternion.identity).GetComponent<Rigidbody2D>();
 
-                Vector3 force = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f));
+                Vector3 force = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
                 newObj.AddForce(force.normalized * 100);
             }
             Destroy(gameObject);
