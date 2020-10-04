@@ -211,7 +211,15 @@ public class TowerBehavior : MonoBehaviour
         {
             StopCoroutine(_playbackCoroutine);
             _playbackCoroutine = null;
-            //play some sounds
+
+            int lootAmount = Mathf.FloorToInt(cost / 2f);
+            for (int i = 0; i < lootAmount; i++)
+            {
+                Rigidbody2D newObj = Instantiate(GameManager.Instance.loot, transform.position, Quaternion.identity).GetComponent<Rigidbody2D>();
+
+                Vector3 force = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                newObj.AddForce(force.normalized * 100);
+            }
             Destroy(gameObject);
         }
     }
@@ -225,6 +233,7 @@ public class TowerBehavior : MonoBehaviour
 
     public void Build()
     {
+        GameManager.Instance.Mana -= cost;
         StartCoroutine(BuildAfterDuration());
         // Gain control immediately, so that the control can be removed even during the build
         GainControl();

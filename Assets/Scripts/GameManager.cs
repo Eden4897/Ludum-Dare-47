@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public Camera Camera { get; private set; }
 
+    [SerializeField] public GameObject loot;
     private int health = 20;
     private int mana = 100;
     private int wave = 1;

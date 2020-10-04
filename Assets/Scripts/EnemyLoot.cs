@@ -1,47 +1,29 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
 public class EnemyLoot : MonoBehaviour
 {
-    public float dropProbability = 0.1f;
-    public int manaValue = 10;
-    public float maxDropDistance = 1;
-    public float despawnInterval = 15;
-
+    public Vector3 target;
     private SpriteRenderer _spriteRenderer;
+    private Rigidbody2D _rigidbody;
     private IEnumerator despawnCoroutine;
 
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _rigidbody = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
     {
-        despawnCoroutine = DespawnAfterInterval();
-        StartCoroutine(despawnCoroutine);
     }
 
-    private IEnumerator DespawnAfterInterval()
+    private void Update()
     {
-        yield return new WaitForSeconds(despawnInterval);
-        Destroy(gameObject);
-    }
-
-    public bool TryDropChance()
-    {
-        return Random.Range(0f, 1f) < dropProbability;
-    }
-
-    // TODO: call
-    public void OnClick()
-    {
-        GameManager.Instance.Mana += manaValue;
-        StopCoroutine(despawnCoroutine);
-        Destroy(gameObject);
+        Vector3 force = target - transform.position;
+        _rigidbody.AddForce(force.normalized * 5);
     }
 }

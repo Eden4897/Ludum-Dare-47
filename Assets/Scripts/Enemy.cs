@@ -10,23 +10,24 @@ using UnityEngine.Assertions;
 public class Enemy : MonoBehaviour
 {
     // Configuration
-    public float initialSpeed = 1;
-    public float initialHealth = 1;
-    public List<EnemyLoot> lootTable = new List<EnemyLoot>();
+    protected float speed = 1;
+    protected float health = 1;
+    protected int minManaDrop = 2;
+    protected int maxManaDrop = 4;
+    [SerializeField] protected GameObject loot;
 
     // Runtime variables
     [SerializeField] private List<EnemyStatus> statuses = new List<EnemyStatus>();
-    [SerializeField] private float health;
 
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
     private SpriteRenderer _spriteRenderer;
 
-    public float Speed =>
-        statuses.Aggregate(initialSpeed, (acc, modifier) => acc * modifier.speedMultiplier);
+    //public float Speed =>
+    //    statuses.Aggregate(speed, (acc, modifier) => acc * modifier.speedMultiplier);
 
-    public float MaxHealth =>
-        statuses.Aggregate(initialHealth, (acc, modifier) => acc * modifier.healthMultiplier);
+    //public float MaxHealth =>
+    //    statuses.Aggregate(health, (acc, modifier) => acc * modifier.healthMultiplier);
 
     public Color Color =>
         statuses.Aggregate(_spriteRenderer.color, (acc, modifier) => acc * modifier.colorEffect);
@@ -36,29 +37,12 @@ public class Enemy : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        Assert.IsTrue(_rigidbody.isKinematic);
+        //Assert.IsTrue(_rigidbody.isKinematic);
         Assert.IsTrue(_collider.isTrigger);
     }
 
     private void Start()
     {
-        if (Random.Range(1, 10) > 9)
-        {
-            statuses.Add(EnemyStatus.Virus);
-        }
-
-        if (Random.Range(1, 10) > 8)
-        {
-            statuses.Add(EnemyStatus.Tank);
-        }
-
-        if (Random.Range(1, 10) > 7)
-        {
-            statuses.Add(EnemyStatus.Jackrabbit);
-        }
-
-        health = MaxHealth;
-        _spriteRenderer.color = Color;
     }
 
     public List<Vector2> path = new List<Vector2>();
@@ -75,7 +59,7 @@ public class Enemy : MonoBehaviour
             while ((Vector2) transform.position != end)
             {
                 _t += Time.deltaTime;
-                transform.position = Vector2.Lerp(start, end, _t / distance * Speed);
+                transform.position = Vector2.Lerp(start, end, _t / distance * speed);
                 yield return null;
             }
         }
@@ -88,25 +72,20 @@ public class Enemy : MonoBehaviour
         {
             // TODO: coroutine can't be stopped like this, we need a reference
             StopCoroutine(Move());
-            TryDropLoot();
+            DropLoot();
             EnemyManager.Instance.Despawn(this);
         }
     }
 
-    private void TryDropLoot()
+    private void DropLoot()
     {
-        foreach (var lootPrefab in lootTable)
+        int lootAmount = Random.Range(minManaDrop, maxManaDrop + 1);
+        for (int i = 0; i < lootAmount; i++)
         {
-            if (lootPrefab.TryDropChance())
-            {
-                var loot = Instantiate(lootPrefab.gameObject, transform.position, Quaternion.identity)
-                    .GetComponent<EnemyLoot>();
-                loot.transform.Translate(
-                    Random.Range(0f, loot.maxDropDistance),
-                    Random.Range(0f, loot.maxDropDistance),
-                    Random.Range(0f, loot.maxDropDistance)
-                );
-            }
+            Rigidbody2D newObj = Instantiate(GameManager.Instance.loot, transform.position, Quaternion.identity).GetComponent<Rigidbody2D>();
+
+            Vector3 force = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+            newObj.AddForce(force.normalized * 100);
         }
     }
 

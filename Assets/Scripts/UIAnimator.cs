@@ -39,6 +39,7 @@ public class UIAnimator : MonoBehaviour
 
     public void SpawnTower()
     {
+        if (GameManager.Instance.Mana < towerPrefab.cost) return;
         if (towerPlacement.currentTower)
         {
             Debug.Log("is controlling tower");
