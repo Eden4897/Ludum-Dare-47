@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -27,7 +28,7 @@ public class TowerBehavior : MonoBehaviour
     /// There are two special exceptions, which don't represent a moment of shooting:
     /// First entry represents the time when recording started, and the last entry when it ended.
     /// </summary>
-    protected List<KeyValuePair<float, float>> recording = new List<KeyValuePair<float, float>>();
+    protected List<KeyValuePair<float, Tuple<float, Vector2>>> recording = new List<KeyValuePair<float, Tuple<float, Vector2>>>();
     private float degrees;
     protected float recordingTimeFrame = 10;
     protected bool isControlled;
@@ -88,7 +89,7 @@ public class TowerBehavior : MonoBehaviour
             {
                 _timeSinceLastShot = 0;
                 Shoot();
-                recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
+                recording.Add(new KeyValuePair<float, Tuple<float, Vector2>>(Time.time, new Tuple<float, Vector2>(-degrees, cam.ScreenToWorldPoint(Input.mousePosition))));
             }
         }
         else
@@ -129,7 +130,7 @@ public class TowerBehavior : MonoBehaviour
     public void LoseControl()
     {
         // Represent the ending of recording as a last entry
-        recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
+        recording.Add(new KeyValuePair<float, Tuple<float, Vector2>>(Time.time, new Tuple<float, Vector2>(-degrees, cam.ScreenToWorldPoint(Input.mousePosition))));
         isControlled = false;
 
         //clean recording
@@ -162,7 +163,7 @@ public class TowerBehavior : MonoBehaviour
         _playbackCoroutine = null;
         // Represent the beginning of recording as a first entry
         //Assert.IsFalse(recording.Any());
-        recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
+        recording.Add(new KeyValuePair<float, Tuple<float, Vector2>>(Time.time, new Tuple<float, Vector2>(-degrees, cam.ScreenToWorldPoint(Input.mousePosition))));
         GameManager.Instance.controlledTowers.Add(this);
         OnGainControl();
     }
@@ -186,14 +187,14 @@ public class TowerBehavior : MonoBehaviour
                 {
                     playbackTime += Time.deltaTime;
                     // TODO: wrap to limit a single rotation by a maximum of 180 degrees
-                    var partialDegrees = startDegrees + (recording[i].Value - startDegrees)
+                    var partialDegrees = startDegrees + (recording[i].Value.Item1 - startDegrees)
                         * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
                            / (recording[i].Key - recording[i - 1].Key));
                     Pointer.transform.eulerAngles = new Vector3(0f, 0f, partialDegrees);
                     yield return null;
                 }
 
-                Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value);
+                Pointer.transform.eulerAngles = new Vector3(0f, 0f, recording[i].Value.Item1);
                 if (i != recording.Count - 1)
                 {
                     Shoot();
@@ -224,7 +225,7 @@ public class TowerBehavior : MonoBehaviour
             {
                 Rigidbody2D newObj = Instantiate(GameManager.Instance.loot, transform.position, Quaternion.identity).GetComponent<Rigidbody2D>();
 
-                Vector3 force = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+                Vector3 force = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f));
                 newObj.AddForce(force.normalized * 100);
             }
             Destroy(gameObject);
