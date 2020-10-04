@@ -86,6 +86,13 @@ public class TowerPlacement : MonoBehaviour
             {
                 grid.GetCell(pos + occupyingLocation).occupied = true;
             }
+
+            // Transfer control to a new tower
+            foreach (var tower in new List<TowerBehavior>(GameManager.Instance.controlledTowers))
+            {
+                tower.LoseControl();
+            }
+
             currentTower.Build();
             currentTower = null;
         }

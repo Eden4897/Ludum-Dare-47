@@ -35,6 +35,7 @@ public class TowerBehavior : MonoBehaviour
     protected List<KeyValuePair<float, float>> recording = new List<KeyValuePair<float, float>>();
 
     //bahavior
+    public float buildDuration = 1f;
     protected float health = 10;
     public List<Vector2Int> occupyingLocations = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
     public Vector2 centre;
@@ -44,8 +45,8 @@ public class TowerBehavior : MonoBehaviour
     {
         cam = Camera.main;
         Pointer.SetActive(false);
+        // TODO: maybe need to do in Build() instead?
         centre = occupyingLocations[occupyingLocations.Count - 1] + new Vector2Int(1, 1) - occupyingLocations[0];
-        GainControl();
     }
 
     private void Update()
@@ -65,7 +66,10 @@ public class TowerBehavior : MonoBehaviour
             FollowMouse(cam.ScreenToWorldPoint(Input.mousePosition));
 
             _timeSinceLastShot += Time.deltaTime;
-            if (Input.GetMouseButtonDown(0) && _timeSinceLastShot >= reloadInterval)
+            if (Input.GetMouseButton(0)
+                && !UI.Instance.InteractionBusy
+                && !Utility.IsPointerOverUI()
+                && _timeSinceLastShot >= reloadInterval)
             {
                 _timeSinceLastShot = 0;
                 Shoot();
@@ -128,6 +132,7 @@ public class TowerBehavior : MonoBehaviour
 
         _playbackCoroutine = Play();
         StartCoroutine(_playbackCoroutine);
+        GameManager.Instance.controlledTowers.Remove(this);
         OnLoseControl();
     }
 
@@ -148,6 +153,7 @@ public class TowerBehavior : MonoBehaviour
         // Represent the beginning of recording as a first entry
         Assert.IsFalse(recording.Any());
         recording.Add(new KeyValuePair<float, float>(Time.time, -degrees));
+        GameManager.Instance.controlledTowers.Add(this);
         OnGainControl();
     }
 
@@ -168,6 +174,7 @@ public class TowerBehavior : MonoBehaviour
                 while (playbackTime <= playbackNextTarget)
                 {
                     playbackTime += Time.deltaTime;
+                    // TODO: wrap to limit a single rotation by a maximum of 180 degrees
                     var partialDegrees = startDegrees + (recording[i].Value - startDegrees)
                         * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
                            / (recording[i].Key - recording[i - 1].Key));
@@ -220,6 +227,14 @@ public class TowerBehavior : MonoBehaviour
 
     public void Build()
     {
+        StartCoroutine(BuildAfterDuration());
+        // Gain control immediately, so that the control can be removed even during the build
+        GainControl();
+    }
+
+    public IEnumerator BuildAfterDuration()
+    {
+        yield return new WaitForSeconds(buildDuration);
         isEnabled = true;
         Pointer.SetActive(true);
     }

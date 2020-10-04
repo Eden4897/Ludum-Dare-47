@@ -21,6 +21,13 @@ public class EnemyManager : MonoBehaviour
         {
             throw new Exception("Added Enemy Manager twice");
         }
+
+        _instance = this;
+    }
+
+    private void OnDisable()
+    {
+        _instance = null;
     }
 
     void Update()
