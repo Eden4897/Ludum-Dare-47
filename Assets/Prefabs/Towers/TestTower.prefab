@@ -179,6 +179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bullet: {fileID: 4895700047062342956, guid: f01cc5f6d024a044bbeeae1e8a2408d9, type: 3}
   Pointer: {fileID: 418287506399484152}
+  buildDuration: 1
   occupyingLocations:
   - {x: 0, y: 0}
   - {x: 0, y: 1}

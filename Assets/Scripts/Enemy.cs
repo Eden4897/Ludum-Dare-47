@@ -9,11 +9,15 @@ using UnityEngine.Assertions;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Enemy : MonoBehaviour
 {
+    // Configuration
     public float initialSpeed = 1;
     public float initialHealth = 1;
     public float initialDamageToPlayer = 10;
-    public List<EnemyStatus> statuses = new List<EnemyStatus>();
-    public float health;
+    public List<EnemyLoot> lootTable = new List<EnemyLoot>();
+
+    // Runtime variables
+    [SerializeField] private List<EnemyStatus> statuses = new List<EnemyStatus>();
+    [SerializeField] private float health;
 
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
@@ -86,8 +90,27 @@ public class Enemy : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
+            // TODO: coroutine can't be stopped like this, we need a reference
             StopCoroutine(Move());
+            TryDropLoot();
             EnemyManager.Instance.Despawn(this);
+        }
+    }
+
+    private void TryDropLoot()
+    {
+        foreach (var lootPrefab in lootTable)
+        {
+            if (lootPrefab.TryDropChance())
+            {
+                var loot = Instantiate(lootPrefab.gameObject, transform.position, Quaternion.identity)
+                    .GetComponent<EnemyLoot>();
+                loot.transform.Translate(
+                    Random.Range(0f, loot.maxDropDistance),
+                    Random.Range(0f, loot.maxDropDistance),
+                    Random.Range(0f, loot.maxDropDistance)
+                );
+            }
         }
     }
 
