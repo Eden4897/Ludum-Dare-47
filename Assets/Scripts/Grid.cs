@@ -3,7 +3,7 @@ using UnityEngine;
 
 public struct Grid
 {
-    // TODO: refactor to 1D array to support serialization
+    // TODO: refactor to 1D array to support serialization (and allow hot-swap)
     // https://forum.unity.com/threads/how-do-i-get-multidimensional-arrays-to-persist.82038/
     private Cell[][] cells;
     private Vector2Int _origin;
@@ -24,6 +24,7 @@ public struct Grid
 
     public ref Cell GetCell(int x, int y)
     {
+        // TODO NOTE: Unity crashes here after hot-swap (alt+tabbing to Editor from code)
         return ref cells[x - _origin.x][y - _origin.y];
     }
 
