@@ -214,12 +214,26 @@ public class TowerBehavior : MonoBehaviour
 
     protected virtual IEnumerator Play()
     {
+        while (recording.Count <= 2)
+        {
+            // Tower without any recordings
+            yield return new WaitForSeconds(999);
+        }
+
+        // Make sure the last recording is of the length of "bulletLife"
+        // to avoid instant shots on the threshold between last and first shot
+        recording[recording.Count - 1] = new KeyValuePair<float, Tuple<Vector2, float>>(
+            recording.Count > 2
+                ? recording[recording.Count - 2].Key + bulletLife
+                : bulletLife,
+            recording[recording.Count - 1].Value
+        );
+
         while (true)
         {
-            if (recording.Count <= 2) break;
             float playbackTime = 0;
             // Skip first entry which represents start time, and don't shoot during last entry
-            for (int i = 1; i < recording.Count - 1; ++i)
+            for (int i = 1; i < recording.Count; ++i)
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
                 float startDegrees = Pointer.transform.localEulerAngles.z;
@@ -256,8 +270,6 @@ public class TowerBehavior : MonoBehaviour
                     Shoot();
                 }
             }
-            //just in case something happens
-            yield return null;
         }
     }
 
