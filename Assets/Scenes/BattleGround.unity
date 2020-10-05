@@ -8333,7 +8333,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '20/40
+  m_text: '20/300
 
 '
   m_isRightToLeft: 0
@@ -8469,7 +8469,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '20/10
+  m_text: '20/100
 
 '
   m_isRightToLeft: 0

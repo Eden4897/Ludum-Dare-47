@@ -56,6 +56,8 @@ public class UIManager : MonoBehaviour
         // }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            // Re-register as game running in case the game was launched without going through Title (e.g. in Editor)
+            TitleManager.GameRunning = true;
             SceneManager.LoadScene(TitleManager.TitleScreenName, LoadSceneMode.Additive);
         }
     }
