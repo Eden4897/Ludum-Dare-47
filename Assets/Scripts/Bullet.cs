@@ -14,7 +14,8 @@ public class Bullet : MonoBehaviour
 
     public GameObject ignoreCol;
 
-    private bool isEnabled = false; //POOP
+    // TODO: rename; this needs to be enabled on laser tower to damage towrs due to its short life
+    public bool isEnabled = false; //POOP
     // TODO: explosion
     //public bool impactExplosion;
 

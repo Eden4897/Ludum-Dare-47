@@ -48,7 +48,7 @@ public class TowerPlacement : MonoBehaviour
             UpdateTiles(mousePos);
         }
 
-        if (Input.GetMouseButtonDown(1) && !Utility.IsPointerOverUI())
+        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !Utility.IsPointerOverUI())
         {
             TryPlaceBuilding(mousePos);
         }
