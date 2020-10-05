@@ -1860,8 +1860,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1744180257}
-        m_MethodName: LoadScene
-        m_Mode: 5
+        m_MethodName: EnterTitleScreen
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2652,6 +2652,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a287deb546094944b84864646e271b93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isOnCreditsScene: 1
 --- !u!1 &1767748463
 GameObject:
   m_ObjectHideFlags: 0

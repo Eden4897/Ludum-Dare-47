@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -40,9 +41,14 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
+        // TODO: removed out of testing purposes
+        // if (Input.GetKeyDown(KeyCode.B))
+        // {
+        //     StartSpawningTower(towerPrefabManual);
+        // }
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            StartSpawningTower(towerPrefabManual);
+            SceneManager.LoadScene(TitleManager.TitleScreenName, LoadSceneMode.Additive);
         }
     }
 
