@@ -46,8 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyManager: {fileID: 640560378597402461}
+  startWaveButton: {fileID: 0}
+  stopWaveButton: {fileID: 0}
   currentWaveIndex: 0
   currentEnemyIndex: 0
+  currentWaveDuration: 0
 --- !u!1 &640560378267691882
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,7 +94,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24fbaa231ac74337901f94600c110764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveInterval: 2
   enemyInterval: 0.5
   enemyPrefabs:
   - {fileID: 2520283222451763666, guid: 7402801291bb92d4aa18c689ee79ae2f, type: 3}
@@ -191,7 +193,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24fbaa231ac74337901f94600c110764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waveInterval: 6
   enemyInterval: 1.5
   enemyPrefabs:
   - {fileID: 2520283222451763666, guid: 7402801291bb92d4aa18c689ee79ae2f, type: 3}
