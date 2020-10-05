@@ -272,6 +272,7 @@ MonoBehaviour:
   Pointer: {fileID: 665455886376157714}
   playerIndicator: {fileID: 1145427015712057200}
   loopingIndicator: {fileID: 143646753017915298}
+  shootAudio: {fileID: 8300000, guid: 69344f13bc2e64f408d67ebea9f5a47a, type: 3}
   reloadInterval: 3
   shootOriginMagnitude: 0.8
   shootOriginOffset: {x: 0, y: 0.45}

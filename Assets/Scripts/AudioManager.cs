@@ -1,30 +1,54 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance = null;
+    public static AudioManager Instance = null;
     [SerializeField] private AudioSource audioSource;
     public float max = 0.5f;
     public bool isTrackEnabled = true;
     public bool isEffectsEnabled = true;
 
+    public AudioClip towerBuildAudio;
+    public AudioClip towerBreakAudio;
+    public AudioClip enemyDeathAudio;
+    public AudioClip menuHoverAudio;
+    public AudioClip menuSelectAudio;
+
+    // public int audioSourcePoolLimit = 5;
     private float _t = 0;
+    // private AudioSource[] _audioSourcesPool;
+    // private int _audioSourcesPoolIndex;
 
     private void Start()
     {
-        if (instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
             return;
         }
         else
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
             audioSource.volume = max;
         }
+    }
+
+    // private void OnEnable()
+    // {
+    //     _audioSourcesPool = new AudioSource[audioSourcePoolLimit];
+    //     for (int i = 0; i < audioSourcePoolLimit; i++)
+    //     {
+    //         _audioSourcesPool[i] = gameObject.AddComponent<AudioSource>();
+    //     }
+    // }
+
+    public void PlayOne(AudioClip clip)
+    {
+        audioSource.PlayOneShot(clip);
+        // _audioSourcesPool[_audioSourcesPoolIndex].PlayOneShot(clip);
+        // _audioSourcesPoolIndex = (_audioSourcesPoolIndex + 1) % _audioSourcesPool.Length;
     }
 
     private void Update()

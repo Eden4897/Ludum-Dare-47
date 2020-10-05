@@ -23,6 +23,7 @@ public class SlimeTower : TowerBehavior
 
         Utility.Invoke(() =>
         {
+            AudioManager.Instance.PlayOne(shootAudio);
             GameObject newBullet = Instantiate(
                 Bullet,
                 transform

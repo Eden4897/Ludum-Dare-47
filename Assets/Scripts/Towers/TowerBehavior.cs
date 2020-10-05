@@ -16,6 +16,8 @@ public class TowerBehavior : MonoBehaviour
     [SerializeField] private GameObject playerIndicator;
     [SerializeField] private GameObject loopingIndicator;
 
+    public AudioClip shootAudio;
+
     protected Animator animator;
     protected Animator Animator => (animator ? animator : animator = GetComponent<Animator>());
 
@@ -59,6 +61,7 @@ public class TowerBehavior : MonoBehaviour
     {
         Assert.AreEqual(tag, "Towers");
         Assert.AreEqual(LayerMask.LayerToName(gameObject.layer), "Towers");
+        Assert.IsNotNull(shootAudio);
     }
 
     protected virtual void Start()
@@ -121,6 +124,7 @@ public class TowerBehavior : MonoBehaviour
         Pointer.transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y, -degrees);
     }
 
+    // TODO: don't override, but instead create hooks & override just OnShoot
     protected virtual void Shoot()
     {
         Vector2 direction = Quaternion.Euler(0f, 0f, 90f)
@@ -146,6 +150,7 @@ public class TowerBehavior : MonoBehaviour
         }, 
         bulletLife);
 
+        AudioManager.Instance.PlayOne(shootAudio);
         OnShoot();
     }
 
@@ -267,7 +272,7 @@ public class TowerBehavior : MonoBehaviour
 
     public void DestroyTower()
     {
-        //play some sounds
+        AudioManager.Instance.PlayOne(AudioManager.Instance.towerBreakAudio);
         if (isControlled)
         {
             // Unregister from the list of controlled towers
@@ -308,6 +313,7 @@ public class TowerBehavior : MonoBehaviour
 
     public void Build()
     {
+        AudioManager.Instance.PlayOne(AudioManager.Instance.towerBuildAudio);
         GameManager.Instance.Mana -= cost;
         StartCoroutine(BuildAfterDuration());
         // Gain control immediately, so that the control can be removed even during the build

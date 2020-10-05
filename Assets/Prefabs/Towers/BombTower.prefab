@@ -200,6 +200,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Bullet: {fileID: 6308707104482614819, guid: 4570daffef6625140be5ac8200b3dd60, type: 3}
   Pointer: {fileID: 2845799412679445906}
+  playerIndicator: {fileID: 0}
+  loopingIndicator: {fileID: 0}
+  shootAudio: {fileID: 8300000, guid: c83775bd94951ef4da98c5a4ae1d29f1, type: 3}
   reloadInterval: 4
   shootOriginMagnitude: 1.08
   shootOriginOffset: {x: 0, y: -0.3}

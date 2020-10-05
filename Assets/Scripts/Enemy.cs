@@ -109,6 +109,7 @@ public class Enemy : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
+            AudioManager.Instance.PlayOne(AudioManager.Instance.enemyDeathAudio);
             // TODO: coroutine can't be stopped like this, we need a reference
             StopCoroutine(Move());
             DropLoot();

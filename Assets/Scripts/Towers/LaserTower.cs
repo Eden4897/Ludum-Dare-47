@@ -19,6 +19,7 @@ public class LaserTower : TowerBehavior
 
         Utility.Invoke(() =>
         {
+            AudioManager.Instance.PlayOne(shootAudio);
             GameObject newBullet = Instantiate(
                 Bullet,
                 default,

@@ -36,6 +36,7 @@ public class UIAnimator : MonoBehaviour
     }
     public void OnPointerEnter()
     {
+        AudioManager.Instance.PlayOne(AudioManager.Instance.menuHoverAudio);
         animator.SetBool("Enter", true);
         animator.SetBool("Exit", false);
     }
@@ -64,6 +65,8 @@ public class UIAnimator : MonoBehaviour
             }
         }
 
+        // Button selection
+        AudioManager.Instance.PlayOne(AudioManager.Instance.menuSelectAudio);
         towerPlacement.LastUiAnimator = this;
         if (towerPrefab)
         {
