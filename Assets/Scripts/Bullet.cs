@@ -10,14 +10,20 @@ public class Bullet : MonoBehaviour
 
     public bool appliesSlow;
 
-    public bool appliesFreeze;
+    public bool appliesKnockback;
 
     public GameObject ignoreCol;
+
+    private bool isEnabled = false; //POOP
     // TODO: explosion
     //public bool impactExplosion;
 
     private void Awake()
     {
+        Utility.Invoke(() =>
+        {
+            isEnabled = true;
+        }, 0.2f);
         Assert.AreEqual(GetComponent<Rigidbody2D>().gravityScale, 0);
         Assert.AreEqual(tag, "Bullets");
         Assert.AreEqual(LayerMask.LayerToName(gameObject.layer), "Bullets");
@@ -41,9 +47,9 @@ public class Bullet : MonoBehaviour
                 enemy.ApplySpeedMultiplier(0.6f, 5f);
             }
 
-            if (appliesFreeze)
+            if (appliesKnockback)
             {
-                enemy.ApplySpeedMultiplier(0, 2f);
+                enemy.GetComponent<Rigidbody2D>().AddForce(GetComponent<Rigidbody2D>().velocity * 2);
             }
 
             enemy.Damage(damage);
@@ -51,6 +57,7 @@ public class Bullet : MonoBehaviour
         }
         else if (other.CompareTag("Towers"))
         {
+            if (!isEnabled) return; //POOP
             hasCollided = true;
             other.GetComponent<TowerBehavior>().Damage(damage);
             Destroy(gameObject);

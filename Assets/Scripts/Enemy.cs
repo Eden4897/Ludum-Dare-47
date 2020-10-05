@@ -11,11 +11,11 @@ using Random = UnityEngine.Random;
 public class Enemy : MonoBehaviour
 {
     // Configuration
-    protected float initialSpeed = 1;
-    protected float speed = 1;
-    protected float health = 2;
-    protected int minManaDrop = 2;
-    protected int maxManaDrop = 4;
+    public float initialSpeed = 1;
+    public float speed = 1;
+    public float health = 2;
+    public int minManaDrop = 2;
+    public int maxManaDrop = 4;
     [SerializeField] protected GameObject loot;
     public List<Vector2> path = new List<Vector2>();
 
@@ -28,15 +28,6 @@ public class Enemy : MonoBehaviour
     private Animator _animator;
     private int _nextPathIndex;
     private IEnumerator _speedCoroutine;
-
-    //public float Speed =>
-    //    statuses.Aggregate(speed, (acc, modifier) => acc * modifier.speedMultiplier);
-
-    //public float MaxHealth =>
-    //    statuses.Aggregate(health, (acc, modifier) => acc * modifier.healthMultiplier);
-
-    public Color Color =>
-        statuses.Aggregate(_spriteRenderer.color, (acc, modifier) => acc * modifier.colorEffect);
 
     private void Awake()
     {
@@ -101,6 +92,20 @@ public class Enemy : MonoBehaviour
 
     public void Damage(float amount)
     {
+        _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 0);
+        Utility.Invoke(() =>
+        {
+            _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1);
+        }, 0.1f);
+        Utility.Invoke(() =>
+        {
+            _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 0);
+        }, 0.2f);
+        Utility.Invoke(() =>
+        {
+            _spriteRenderer.color = new Color(_spriteRenderer.color.r, _spriteRenderer.color.g, _spriteRenderer.color.b, 1);
+        }, 0.3f);
+
         health -= amount;
         if (health <= 0)
         {

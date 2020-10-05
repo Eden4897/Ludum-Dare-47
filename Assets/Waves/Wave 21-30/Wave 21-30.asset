@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67870a0ed2eb9df47a79a6a3360ef382, type: 3}
+  m_Name: Wave 21-30
+  m_EditorClassIdentifier: 
+  minDelay: 0
+  maxDelay: 0
+  enemiesInWave: 0
+  enemyAssets:
+  - {fileID: 11400000, guid: c201e249da0621b4381de625504fc5dd, type: 2}
+  - {fileID: 11400000, guid: ae3ce7a982701474c8855e4644ce7250, type: 2}
+  - {fileID: 11400000, guid: 2e96b40f73707334d819e3126a0f8cfe, type: 2}
+  - {fileID: 11400000, guid: 5757ed3a4075566478d56e513f5215a5, type: 2}

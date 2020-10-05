@@ -10,12 +10,13 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance => (_instance ? _instance : _instance = FindObjectOfType<GameManager>())
                                           ?? throw new Exception("Please add GameManager to the scene");
 
+    public bool isGamePaused = false;
     public Camera Camera { get; private set; }
 
     [SerializeField] public GameObject loot;
     private int health = 20;
     private int mana = 100;
-    private int wave = 1;
+    private int wave = 0;
 
     public int Health
     {
@@ -76,5 +77,17 @@ public class GameManager : MonoBehaviour
     {
         Debug.LogError("Game Over");
         onGameOver.Invoke();
+    }
+
+    public void Pause()
+    {
+        Time.timeScale = 0;
+        isGamePaused = true;
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        isGamePaused = false;
     }
 }

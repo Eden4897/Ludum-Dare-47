@@ -144,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e518c45e341ba0419302b03e23ed3b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {x: -9.33, y: 8.94, z: 0}
+  target: {x: -10.45, y: 9.7, z: 0}
 --- !u!95 &2452464205405621114
 Animator:
   serializedVersion: 3

@@ -136,5 +136,5 @@ MonoBehaviour:
   damage: 0
   isBulletInvincible: 0
   appliesSlow: 0
-  appliesFreeze: 0
+  appliesKnockback: 1
   ignoreCol: {fileID: 0}

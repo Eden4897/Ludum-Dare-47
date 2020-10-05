@@ -89,13 +89,9 @@ public class TowerBehavior : MonoBehaviour
     private void Update()
     {
         if (!isEnabled) return;
-        if (Input.GetKeyDown(KeyCode.P) && _playbackCoroutine == null)
+        if (Input.GetKeyDown(KeyCode.Return) && _playbackCoroutine == null)
         {
             LoseControl();
-        }
-        if (Input.GetKeyDown(KeyCode.O) && _playbackCoroutine != null)
-        {
-            GainControl(true);
         }
 
         if (isControlled)
@@ -118,17 +114,6 @@ public class TowerBehavior : MonoBehaviour
             }
         }
     }
-
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        Handles.Label(
-            transform.position + new Vector3(0.5f, -0.5f, 0),
-            $"{(_playbackCoroutine == null ? "Recording" : "Re-playing")}:{recording.Aggregate("", (acc, x) => acc + $"\n{x.Key}: {x.Value}")}"
-        );
-        Handles.DrawWireDisc((Vector2) transform.position + shootOriginOffset, Vector3.forward, shootOriginMagnitude);
-    }
-#endif
 
     protected virtual void FollowMouse(Vector2 mouseWorldPos)
     {
@@ -317,7 +302,7 @@ public class TowerBehavior : MonoBehaviour
     public void SetGridPosition(Vector2Int pos)
     {
         //move the object
-        transform.position = pos + centre;
+        transform.position = pos + new Vector2(1,1f); //POOP
         _gridPosition = pos;
     }
 

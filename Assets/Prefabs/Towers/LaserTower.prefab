@@ -69,7 +69,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1411296689
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 79e197b256628ef4ba25f53f99c201d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -170,7 +170,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1411296689
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 46cd6c9831e1277498c794ade174f19e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -307,8 +307,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1411296689
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 8547123121408329513, guid: f86c708f9e4361e45833ae0afee8b750,
     type: 3}
@@ -357,20 +357,18 @@ MonoBehaviour:
   Pointer: {fileID: 6963523655948806867}
   playerIndicator: {fileID: 3365241482182747375}
   loopingIndicator: {fileID: 6510986559120916546}
-  reloadInterval: 1
+  reloadInterval: 10
   shootOriginMagnitude: 0.8
   shootOriginOffset: {x: 0, y: 0.65}
   bulletSpeed: 5
   bulletLife: 0.1
-  bulletDamage: 1
+  bulletDamage: 2
   buildDuration: 0
   health: 10
   cost: 20
   occupyingLocations:
   - {x: 0, y: 0}
-  - {x: 0, y: 1}
   - {x: 1, y: 0}
-  - {x: 1, y: 1}
   centre: {x: 0, y: 0}
   delay: 0.5
 --- !u!58 &6963523654494155991
@@ -482,8 +480,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1411296689
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 7383d29b0a2838c459fc797253624717, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

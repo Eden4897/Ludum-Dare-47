@@ -15,6 +15,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI manaText;
     [SerializeField] private TextMeshProUGUI waveText;
+    [SerializeField] private GameObject waveStartButton;
+    [SerializeField] private GameObject pauseButton;
 
     [SerializeField] private List<UIAnimator> UIAnimators;
 
@@ -22,6 +24,7 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
+        pauseButton.SetActive(false);
         if (Instance != null && Instance != this)
         {
             throw new Exception("Added UI twice");
@@ -76,5 +79,17 @@ public class UIManager : MonoBehaviour
     public void OnWaveChange()
     {
         waveText.text = GameManager.Instance.Wave.ToString("00");
+    }
+
+    public void StartWave()
+    {
+        EnemyManager.Instance.StartWave();
+    }
+
+
+    public void SetActiveWaveButton(bool state)
+    {
+        waveStartButton.SetActive(state);
+        //pauseButton.SetActive(!state);
     }
 }

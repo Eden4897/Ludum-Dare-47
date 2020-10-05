@@ -24,21 +24,4 @@ public class FinishLine : MonoBehaviour
             enemy.OnFinish();
         }
     }
-
-    private void OnDrawGizmos()
-    {
-        if (!GameManager.Instance.debug)
-        {
-            return;
-        }
-
-        if (!_collider)
-        {
-            _collider = GetComponent<Collider2D>();
-        }
-
-        var bounds = _collider.bounds;
-        Gizmos.color = new Color(1, 0, 0, 0.15f);
-        Gizmos.DrawCube(bounds.center, bounds.size);
-    }
 }

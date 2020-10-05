@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 215034110547681410}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.514, z: 0}
+  m_LocalPosition: {x: -0.038, y: -0.759, z: 0}
   m_LocalScale: {x: 0.39079, y: 0.39079, z: 0.39079}
   m_Children: []
   m_Father: {fileID: 3111933239992296862}
@@ -69,7 +69,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1411296689
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 46cd6c9831e1277498c794ade174f19e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -205,7 +205,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1411296689
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 52bd1b1cde6777b4d90f1afb61aa159d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -234,20 +234,18 @@ MonoBehaviour:
   Pointer: {fileID: 3111933239955107807}
   playerIndicator: {fileID: 7109597474295222144}
   loopingIndicator: {fileID: 215034110547681410}
-  reloadInterval: 2
+  reloadInterval: 5
   shootOriginMagnitude: 1.2
   shootOriginOffset: {x: 0.039, y: -0.019}
   bulletSpeed: 5
-  bulletLife: 1
-  bulletDamage: 1
+  bulletLife: 3
+  bulletDamage: 0.75
   buildDuration: 0
   health: 10
   cost: 20
   occupyingLocations:
   - {x: 0, y: 0}
-  - {x: 0, y: 1}
   - {x: 1, y: 0}
-  - {x: 1, y: 1}
   centre: {x: 0, y: 0}
   crossbowAnimator: {fileID: 3111933240033593971}
 --- !u!61 &3111933239992296861
@@ -345,7 +343,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1411296689
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 1
   m_Sprite: {fileID: -1201772774456808696, guid: dcb98b28cc14bb44cacee4b59ee5869a,
     type: 3}
@@ -402,7 +400,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3255870953678559365}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8, z: 0}
+  m_LocalPosition: {x: -0.015, y: 0.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 834047548900123853}
@@ -478,7 +476,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1411296689
-  m_SortingLayer: 5
+  m_SortingLayer: 6
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 79e197b256628ef4ba25f53f99c201d3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
