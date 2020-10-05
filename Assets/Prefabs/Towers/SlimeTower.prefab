@@ -102,8 +102,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1411296689
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: -1395208298631096996, guid: 4b67843e5b6930043acbf35cdc0fe3e0,
     type: 3}
@@ -152,7 +152,7 @@ MonoBehaviour:
   Pointer: {fileID: 8080359919472191546}
   reloadInterval: 2.5
   shootOriginMagnitude: 1.22
-  shootOriginOffset: {x: 0, y: 0}
+  shootOriginOffset: {x: 0.4, y: 0.5}
   bulletSpeed: 5
   bulletLife: 1
   bulletDamage: 1
@@ -165,7 +165,7 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 1, y: 1}
   centre: {x: 0, y: 0}
-  slimeAnimator: {fileID: 8080359919793196332}
+  delay: 0.5
 --- !u!58 &8080359919793196368
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -207,7 +207,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8080359921397408059}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.1, z: 0}
+  m_LocalPosition: {x: 0, y: 1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8080359919472191547}

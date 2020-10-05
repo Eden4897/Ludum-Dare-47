@@ -7,11 +7,15 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Animator))]
 public class TowerBehavior : MonoBehaviour
 {
     //references
     [SerializeField] protected GameObject Bullet;
     [SerializeField] protected GameObject Pointer;
+    private Animator animator;
+
+    protected Animator Animator => (animator ? animator : animator = GetComponent<Animator>());
 
     //bullet shooting calculations
     private float _timeSinceLastShot = 0;

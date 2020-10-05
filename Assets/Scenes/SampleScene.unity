@@ -4506,6 +4506,8 @@ MonoBehaviour:
   UIAnimators:
   - {fileID: 1422564120}
   - {fileID: 745794582}
+  - {fileID: 1125443514}
+  - {fileID: 1947126504}
 --- !u!114 &746770609
 MonoBehaviour:
   m_ObjectHideFlags: 0

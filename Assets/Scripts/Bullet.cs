@@ -10,6 +10,8 @@ public class Bullet : MonoBehaviour
     public bool appliesSlow;
 
     public bool appliesFreeze;
+
+    public GameObject ignoreCol;
     // TODO: explosion
     //public bool impactExplosion;
 
@@ -25,13 +27,14 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (hasCollided) return;
-        if (other.collider.CompareTag("Enemies"))
+        if (other.gameObject == ignoreCol) return;
+        if (other.CompareTag("Enemies"))
         {
             hasCollided = true;
-            var enemy = other.collider.GetComponent<Enemy>();
+            var enemy = other.GetComponent<Enemy>();
             if (appliesSlow)
             {
                 enemy.ApplySpeedMultiplier(0.6f, 5f);
@@ -45,16 +48,11 @@ public class Bullet : MonoBehaviour
             enemy.Damage(damage);
             Destroy(gameObject);
         }
-        else if (other.collider.CompareTag("Towers"))
+        else if (other.CompareTag("Towers"))
         {
             hasCollided = true;
-            other.collider.GetComponent<TowerBehavior>().Damage(damage);
+            other.GetComponent<TowerBehavior>().Damage(damage);
             Destroy(gameObject);
         }
     }
-
-    // private void OnTriggerEnter2D(Collider2D collider)
-    // {
-    //     if (hasCollided) return;
-    // }
 }

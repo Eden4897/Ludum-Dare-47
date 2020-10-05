@@ -2,8 +2,6 @@
 
 public class SlimeTower : TowerBehavior
 {
-    public Animator slimeAnimator;
-
     public SlimeTower()
     {
         // Default values
@@ -13,5 +11,38 @@ public class SlimeTower : TowerBehavior
 
     protected override void OnShoot()
     {
+
+    }
+
+    protected override void Shoot()
+    {
+        Animator.Play("SlimeAttack");
+        Vector2 direction = Quaternion.Euler(0f, 0f, 90f)
+                            * new Vector2(Mathf.Cos(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad),
+                            Mathf.Sin(Pointer.transform.localEulerAngles.z * Mathf.Deg2Rad));
+
+        Utility.Invoke(() =>
+        {
+            GameObject newBullet = Instantiate(
+                Bullet,
+                (Vector2)transform.position
+                //+ (Vector2)Bullet.transform.localPosition
+                + shootOriginOffset
+                + direction * shootOriginMagnitude,
+                Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.localEulerAngles),
+                transform
+            );
+            newBullet.transform.localPosition = shootOriginOffset;
+            newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
+
+            newBullet.GetComponent<Bullet>().damage = bulletDamage;
+            newBullet.GetComponent<Bullet>().ignoreCol = gameObject;
+            Utility.Invoke(() =>
+            {
+                newBullet.GetComponent<Bullet>().OnCollide();
+            },
+            bulletLife);
+            OnShoot();
+        }, 0.5f);
     }
 }

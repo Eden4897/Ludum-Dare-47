@@ -2,8 +2,6 @@
 
 public class LaserTower : TowerBehavior
 {
-    public Animator laserAnimator;
-
     public LaserTower()
     {
         // Default values
@@ -16,6 +14,6 @@ public class LaserTower : TowerBehavior
     {
         // laserAnimator.SetBool("Shoot", true);
         // Switching state directly instead of using variable, so that we can force animation to restart sooner
-        laserAnimator.Play("LaserAttack");
+        Animator.Play("LaserAttack");
     }
 }
