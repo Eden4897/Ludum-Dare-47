@@ -88,20 +88,7 @@ public class UIAnimator : MonoBehaviour
 
     public void SpawnTower()
     {
-        if (GameManager.Instance.Mana < towerPrefab.cost)
-        {
-            return;
-        }
-
-        if (towerPlacement.currentTower)
-        {
-            // TODO: this shouldn't occur, because we prevent duplicate selection
-            Debug.LogError("is controlling tower");
-            Destroy(towerPlacement.currentTower.gameObject);
-        }
-
-        towerPlacement.SetActive(true);
-        towerPlacement.currentTower = Instantiate(towerPrefab).GetComponent<TowerBehavior>();
+        UIManager.Instance.StartSpawningTower(towerPrefab);
         SetImageColorActive(true);
     }
 
@@ -115,6 +102,7 @@ public class UIAnimator : MonoBehaviour
         }
 
         towerPlacement.SetActive(false);
+        towerPlacement.LastUiAnimator = null;
         SetImageColorActive(false);
     }
 }

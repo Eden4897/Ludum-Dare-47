@@ -8,10 +8,10 @@ public class UIManager : MonoBehaviour
     private static UIManager _instance;
 
     public static UIManager Instance => (_instance ? _instance : _instance = FindObjectOfType<UIManager>())
-                                 ?? throw new Exception("Please add UI to the scene");
+                                        ?? throw new Exception("Please add UI to the scene");
 
     [SerializeField] private TowerPlacement towerPlacement;
-    [SerializeField] private TowerBehavior towerPrefab;
+    [SerializeField] private TowerBehavior towerPrefabManual;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI manaText;
     [SerializeField] private TextMeshProUGUI waveText;
@@ -39,12 +39,17 @@ public class UIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.B))
         {
-            SpawnTower();
+            StartSpawningTower(towerPrefabManual);
         }
     }
 
-    public void SpawnTower()
+    public void StartSpawningTower(TowerBehavior towerPrefab)
     {
+        if (GameManager.Instance.Mana < towerPrefab.cost)
+        {
+            return;
+        }
+
         if (towerPlacement.currentTower)
         {
             throw new Exception("Tower is already being placed");
