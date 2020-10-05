@@ -41,6 +41,14 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        // TODO: when the camera origin becomes other than [0,0], capture it before first iteration
+        var cameraTransform = GameManager.Instance.Camera.transform;
+        cameraTransform.position = new Vector3(
+            -0.5f + Input.mousePosition.x / 2 / Screen.width,
+            -0.5f + Input.mousePosition.y / 2 / Screen.height,
+            cameraTransform.position.z
+        );
+
         // TODO: removed out of testing purposes
         // if (Input.GetKeyDown(KeyCode.B))
         // {
