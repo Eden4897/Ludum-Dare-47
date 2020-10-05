@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -6517110112916554496}
   - component: {fileID: 6863542557650085804}
   - component: {fileID: 1448112141423082193}
+  - component: {fileID: 2452464205405621114}
   m_Layer: 0
   m_Name: Loot
   m_TagString: Loots
@@ -143,5 +144,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e518c45e341ba0419302b03e23ed3b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {x: -4.67, y: 4.31, z: 0}
-  speed: 5
+  target: {x: -9.33, y: 8.94, z: 0}
+--- !u!95 &2452464205405621114
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3998372885322947300}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 371e11b653fb1dc4aba2efed2b92ff04, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

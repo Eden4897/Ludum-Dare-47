@@ -25,11 +25,6 @@ public class SlimeTower : TowerBehavior
         {
             GameObject newBullet = Instantiate(
                 Bullet,
-                (Vector2)transform.position
-                //+ (Vector2)Bullet.transform.localPosition
-                + shootOriginOffset
-                + direction * shootOriginMagnitude,
-                Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.localEulerAngles),
                 transform
             );
             newBullet.transform.localPosition = shootOriginOffset;

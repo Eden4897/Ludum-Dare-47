@@ -13,8 +13,10 @@ public class TowerBehavior : MonoBehaviour
     //references
     [SerializeField] protected GameObject Bullet;
     [SerializeField] protected GameObject Pointer;
-    private Animator animator;
+    [SerializeField] private GameObject playerIndicator;
+    [SerializeField] private GameObject loopingIndicator;
 
+    protected Animator animator;
     protected Animator Animator => (animator ? animator : animator = GetComponent<Animator>());
 
     //bullet shooting calculations
@@ -59,8 +61,10 @@ public class TowerBehavior : MonoBehaviour
         Assert.AreEqual(LayerMask.LayerToName(gameObject.layer), "Towers");
     }
 
-    private void Start()
+    protected virtual void Start()
     {
+        playerIndicator.SetActive(false);
+        loopingIndicator.SetActive(false);
         Pointer.SetActive(false);
 
         //cauculate centre mid point of stucture
@@ -78,6 +82,8 @@ public class TowerBehavior : MonoBehaviour
         }
         _max += new Vector2(1, 1);
         centre = _max / 2f;
+
+        _timeSinceLastShot = reloadInterval;
     }
 
     private void Update()
@@ -110,9 +116,6 @@ public class TowerBehavior : MonoBehaviour
                     new Tuple<Vector2, float>(mouseClick, -degrees)
                 ));
             }
-        }
-        else
-        {
         }
     }
 
@@ -167,6 +170,8 @@ public class TowerBehavior : MonoBehaviour
 
     public void LoseControl()
     {
+        playerIndicator.SetActive(false);
+        loopingIndicator.SetActive(true);
         // Represent the ending of recording as a last entry
         recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
             Time.time,
@@ -194,6 +199,8 @@ public class TowerBehavior : MonoBehaviour
 
     private void GainControl(bool stopPlaybackAndClearRecording = false)
     {
+        Debug.Log("Gained");
+        playerIndicator.SetActive(true);
         isControlled = true;
         if (stopPlaybackAndClearRecording)
         {
@@ -223,7 +230,7 @@ public class TowerBehavior : MonoBehaviour
             if (recording.Count <= 2) break;
             float playbackTime = 0;
             // Skip first entry which represents start time, and don't shoot during last entry
-            for (int i = 1; i < recording.Count; ++i)
+            for (int i = 1; i < recording.Count - 1; ++i)
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
                 float startDegrees = Pointer.transform.localEulerAngles.z;
@@ -325,7 +332,8 @@ public class TowerBehavior : MonoBehaviour
 
     public IEnumerator BuildAfterDuration()
     {
-        yield return new WaitForSeconds(buildDuration);
+        yield return null;
+        //yield return new WaitForSeconds(buildDuration);
         isEnabled = true;
         Pointer.SetActive(true);
     }

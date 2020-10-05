@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 public class Bullet : MonoBehaviour
 {
     public float damage;
+    [SerializeField] private bool isBulletInvincible = false;
     private bool hasCollided = false;
 
     public bool appliesSlow;
@@ -29,7 +30,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (hasCollided) return;
+        if (!isBulletInvincible) if (hasCollided) return;
         if (other.gameObject == ignoreCol) return;
         if (other.CompareTag("Enemies"))
         {

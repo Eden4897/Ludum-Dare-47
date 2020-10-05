@@ -19,9 +19,10 @@ public class Utility : MonoBehaviour
         }
     }
 
-    public static void Invoke(Action target, float timeout)
+    public static Action Invoke(Action target, float timeout)
     {
         instance.StartCoroutine(instance.InvokeRoutine(target, timeout));
+        return target;
     }
 
     private IEnumerator InvokeRoutine(Action target, float timeout)

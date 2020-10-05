@@ -25,6 +25,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private Collider2D _collider;
     private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
     private int _nextPathIndex;
     private IEnumerator _speedCoroutine;
 
@@ -42,12 +43,20 @@ public class Enemy : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<Collider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
         Assert.IsFalse(_rigidbody.isKinematic);
         Assert.IsFalse(_collider.isTrigger);
     }
 
     private void Start()
     {
+        transform.position = path[0];
+    }
+
+    private void Update()
+    {
+        _animator.SetFloat("VerticalSpeed", _rigidbody.velocity.x);
+        _animator.SetFloat("HorizontalSpeed", _rigidbody.velocity.y);
     }
 
     public void ApplySpeedMultiplier(float multiplier, float duration)

@@ -2,6 +2,7 @@
 
 public class LaserTower : TowerBehavior
 {
+    public float delay;
     public LaserTower()
     {
         // Default values
@@ -10,10 +11,30 @@ public class LaserTower : TowerBehavior
         shootOriginOffset = new Vector2(0, 0.65f);
     }
 
-    protected override void OnShoot()
+    protected override void Shoot()
     {
-        // laserAnimator.SetBool("Shoot", true);
-        // Switching state directly instead of using variable, so that we can force animation to restart sooner
         Animator.Play("LaserAttack");
+
+        Quaternion direction = Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.localEulerAngles);
+
+        Utility.Invoke(() =>
+        {
+            GameObject newBullet = Instantiate(
+                Bullet,
+                default,
+                direction,
+                transform
+            ); ;
+            newBullet.transform.localPosition = shootOriginOffset;
+
+            newBullet.GetComponent<Bullet>().damage = bulletDamage;
+            newBullet.GetComponent<Bullet>().ignoreCol = gameObject;
+            Utility.Invoke(() =>
+            {
+                newBullet.GetComponent<Bullet>().OnCollide();
+            },
+            bulletLife);
+            OnShoot();
+        }, delay);
     }
 }
