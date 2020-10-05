@@ -20,6 +20,36 @@ TextureImporter:
   - first:
       213: 5329619914587183969
     second: Mana_5
+  - first:
+      213: -5953076003709022609
+    second: Mana_0
+  - first:
+      213: 7835187619931407539
+    second: Mana_1
+  - first:
+      213: -5099442968820333140
+    second: Mana_2
+  - first:
+      213: -6875242612558268567
+    second: Mana_3
+  - first:
+      213: 5526275845466469363
+    second: Mana_4
+  - first:
+      213: 6776685941425674884
+    second: Mana_5
+  - first:
+      213: 8656592743763823387
+    second: Mana_6
+  - first:
+      213: 4786681609006135157
+    second: Mana_7
+  - first:
+      213: 2239175087525886933
+    second: Mana_8
+  - first:
+      213: -2098988611194885194
+    second: Mana_9
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -63,7 +93,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -167,8 +197,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d2862b12f26d0540800000000000000
-      internalID: 4975741955291382485
+      spriteID: f6e85065aec626da0800000000000000
+      internalID: -5953076003709022609
       vertices: []
       indices: 
       edges: []
@@ -188,8 +218,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9959cde7cfa441eb0800000000000000
-      internalID: -4750089258648431207
+      spriteID: 3b4cc82b0ad2cbc60800000000000000
+      internalID: 7835187619931407539
       vertices: []
       indices: 
       edges: []
@@ -209,8 +239,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 097a18fafbf09d7a0800000000000000
-      internalID: -6352028483471693936
+      spriteID: ca5c91b43a32b39b0800000000000000
+      internalID: -5099442968820333140
       vertices: []
       indices: 
       edges: []
@@ -230,8 +260,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a4f702deec6408ee0800000000000000
-      internalID: -1260930041108201654
+      spriteID: 967f5dd354b3690a0800000000000000
+      internalID: -6875242612558268567
       vertices: []
       indices: 
       edges: []
@@ -251,8 +281,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 426aacb3375324bd0800000000000000
-      internalID: -2647494861899782620
+      spriteID: 3f3b9db1a9641bc40800000000000000
+      internalID: 5526275845466469363
       vertices: []
       indices: 
       edges: []
@@ -272,8 +302,92 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 16b11d4231d96f940800000000000000
-      internalID: 5329619914587183969
+      spriteID: 48a9f0595ff9b0e50800000000000000
+      internalID: 6776685941425674884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mana_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b1b44416c35622870800000000000000
+      internalID: 8656592743763823387
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mana_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 577b4bdff85bd6240800000000000000
+      internalID: 4786681609006135157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mana_8
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5db72e1e0e5231f10800000000000000
+      internalID: 2239175087525886933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Mana_9
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6bb6322aaf4eed2e0800000000000000
+      internalID: -2098988611194885194
       vertices: []
       indices: 
       edges: []

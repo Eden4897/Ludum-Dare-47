@@ -48,6 +48,9 @@ TagManager:
   - name: Background
     uniqueID: 979892271
     locked: 0
+  - name: Grid
+    uniqueID: 863895855
+    locked: 0
   - name: Mana
     uniqueID: 3785046757
     locked: 0

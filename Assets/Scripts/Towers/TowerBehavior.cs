@@ -199,7 +199,6 @@ public class TowerBehavior : MonoBehaviour
 
     private void GainControl(bool stopPlaybackAndClearRecording = false)
     {
-        Debug.Log("Gained");
         playerIndicator.SetActive(true);
         isControlled = true;
         if (stopPlaybackAndClearRecording)
