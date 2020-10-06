@@ -99,10 +99,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpeed: 1
-  speed: 3
+  speed: 4
   health: 5
-  minManaDrop: 10
-  maxManaDrop: 15
+  minManaDrop: 13
+  maxManaDrop: 18
   loot: {fileID: 3998372885322947300, guid: cc56a721ce863c44d8f16cd4c91b2b25, type: 3}
   path: []
 --- !u!50 &5166110620653409646

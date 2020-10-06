@@ -101,8 +101,8 @@ MonoBehaviour:
   initialSpeed: 1
   speed: 2
   health: 3
-  minManaDrop: 2
-  maxManaDrop: 4
+  minManaDrop: 5
+  maxManaDrop: 7
   loot: {fileID: 3998372885322947300, guid: cc56a721ce863c44d8f16cd4c91b2b25, type: 3}
   path: []
 --- !u!50 &47343945860015717

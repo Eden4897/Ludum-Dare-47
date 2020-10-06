@@ -22,6 +22,7 @@ public class TowerPlacement : MonoBehaviour
 
     //tilemap stuff
     [SerializeField] private Tilemap gridTilemap;
+    [SerializeField] private Tilemap grassTilemap;
     [SerializeField] private Tile normalTile;
     [SerializeField] private Tile occupiedTile;
     [SerializeField] private Tile freeTile;
@@ -29,7 +30,25 @@ public class TowerPlacement : MonoBehaviour
     private void Start()
     {
         _instance = this;
-        Grid = new Grid(64, 64, new Vector2Int(-32, -32));
+        Grid = new Grid(128, 128, new Vector2Int(-64, -64));
+        grassTilemap.CompressBounds();
+
+        for (int x = -grassTilemap.cellBounds.size.x; x < grassTilemap.cellBounds.size.x; ++x)
+        {
+            for (int y = -grassTilemap.cellBounds.size.y; y < grassTilemap.cellBounds.size.y; ++y)
+            {
+                Debug.Log("Lol");
+                TileBase tile = grassTilemap.GetTile(new Vector3Int(x, y, 0));
+                if(tile != null)
+                {
+                    Grid.GetCell(x, y).occupied = false;
+                }
+                else
+                {
+                    Grid.GetCell(x, y).occupied = true;
+                }
+            }
+        }
     }
 
     private void Update()

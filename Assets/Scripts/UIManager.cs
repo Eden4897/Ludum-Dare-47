@@ -12,7 +12,7 @@ public class UIManager : MonoBehaviour
                                         ?? throw new Exception("Please add UI to the scene");
 
     [SerializeField] private TowerPlacement towerPlacement;
-    [SerializeField] private TowerBehavior towerPrefabManual;
+    //[SerializeField] private TowerBehavior towerPrefabManual;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI manaText;
     [SerializeField] private TextMeshProUGUI waveText;
