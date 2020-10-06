@@ -56,11 +56,11 @@ public class UIManager : MonoBehaviour
         // }
     }
 
-    public void StartSpawningTower(TowerBehavior towerPrefab)
+    public bool StartSpawningTower(TowerBehavior towerPrefab)
     {
         if (GameManager.Instance.Mana < towerPrefab.cost)
         {
-            return;
+            return false;
         }
 
         if (towerPlacement.currentTower)
@@ -70,6 +70,7 @@ public class UIManager : MonoBehaviour
 
         towerPlacement.SetActive(true);
         towerPlacement.currentTower = Instantiate(towerPrefab).GetComponent<TowerBehavior>();
+        return true;
     }
 
     public void OnManaChange()
