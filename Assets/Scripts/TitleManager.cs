@@ -7,8 +7,7 @@ public class TitleManager : MonoBehaviour
 {
     public const string TitleScreenName = "TitleScreen";
     public const string CreditsScreenName = "CreditsScreen";
-
-    public static bool GameRunning;
+    public const string BattleGroundScreenName = "BattleGround";
 
     public bool isOnCreditsScene;
 
@@ -44,32 +43,17 @@ public class TitleManager : MonoBehaviour
 
     public void EnterBattleGround()
     {
-        if (GameRunning)
-        {
-            SceneManager.UnloadSceneAsync(TitleScreenName);
-        }
-        else
-        {
-            GameRunning = true;
-            SceneManager.LoadScene("BattleGround");
-        }
+        SceneManager.LoadScene(BattleGroundScreenName);
     }
 
     public void EnterCreditsScreen()
     {
-        SceneManager.LoadScene(CreditsScreenName, GameRunning ? LoadSceneMode.Additive : LoadSceneMode.Single);
+        SceneManager.LoadScene(CreditsScreenName);
     }
 
     public void EnterTitleScreen()
     {
-        if (GameRunning)
-        {
-            SceneManager.UnloadSceneAsync(CreditsScreenName);
-        }
-        else
-        {
-            SceneManager.LoadScene(TitleScreenName);
-        }
+        SceneManager.LoadScene(TitleScreenName);
     }
 
     public void Quit()

@@ -4,11 +4,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Canvas))]
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] private Toggle TrackToggle;
     [SerializeField] private Toggle EffectsToggle;
     [SerializeField] private Slider volumeSlider;
+    private Canvas _canvas;
+
+    private void Awake()
+    {
+        _canvas = GetComponent<Canvas>();
+    }
 
     private void Start()
     {
@@ -20,7 +27,11 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        
+        // "Esc" disables full-screen in WebGL, so we also support "P"
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+        {
+            _canvas.enabled = !_canvas.enabled;
+        }
     }
 
     public void LoadScene(int index)
