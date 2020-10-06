@@ -107,7 +107,7 @@ public class UIManager : MonoBehaviour
     public void SetActiveWaveButton(bool state)
     {
         waveStartButton.SetActive(state);
-        //pauseButton.SetActive(!state);
+        pauseButton.SetActive(!state);
     }
 
     public void SetActiveEnterNotif(bool state)
