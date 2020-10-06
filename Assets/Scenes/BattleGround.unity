@@ -10313,7 +10313,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 636645412}
+  m_TargetGraphic: {fileID: 2047568431}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -12420,7 +12420,6 @@ MonoBehaviour:
   manaText: {fileID: 1629832918}
   waveText: {fileID: 2008074312}
   waveStartButton: {fileID: 1145185518}
-  pauseButton: {fileID: 0}
   enterNotif: {fileID: 862840547}
   UIAnimators:
   - {fileID: 1422564120}
