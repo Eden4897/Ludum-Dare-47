@@ -2,18 +2,6 @@
 
 public class SlimeTower : TowerBehavior
 {
-    public SlimeTower()
-    {
-        // Default values
-        reloadInterval = 2.5f;
-        shootOriginMagnitude = 1.22f;
-    }
-
-    protected override void OnShoot()
-    {
-
-    }
-
     protected override void Shoot()
     {
         Animator.Play("SlimeAttack");
@@ -28,7 +16,7 @@ public class SlimeTower : TowerBehavior
                 Bullet,
                 transform
             );
-            newBullet.transform.localPosition = shootOriginOffset;
+            newBullet.transform.localPosition = new Vector3(0, 0);
             newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
 
             newBullet.GetComponent<Bullet>().damage = bulletDamage;

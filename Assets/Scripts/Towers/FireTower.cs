@@ -21,7 +21,7 @@ public class FireTower : TowerBehavior
                 Bullet,
                 transform
             );
-            newBullet.transform.localPosition = shootOriginOffset;
+            newBullet.transform.localPosition = new Vector3(0,0);
             newBullet.GetComponent<Rigidbody2D>().velocity = direction * bulletSpeed;
 
             newBullet.GetComponent<Bullet>().damage = bulletDamage;

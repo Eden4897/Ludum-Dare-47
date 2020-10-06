@@ -13,7 +13,8 @@ public class TowerBehavior : MonoBehaviour
     //references
     [SerializeField] protected GameObject Bullet;
     [SerializeField] protected GameObject Pointer;
-    [SerializeField] private GameObject playerIndicator;
+    [SerializeField] private GameObject reloadFrame;
+    [SerializeField] private GameObject reloadBar;
     [SerializeField] private GameObject loopingIndicator;
 
     public AudioClip shootAudio;
@@ -25,7 +26,7 @@ public class TowerBehavior : MonoBehaviour
     private float _timeSinceLastShot = 0;
     public float reloadInterval = 1;
     public float shootOriginMagnitude = 0.8f;
-    public Vector2 shootOriginOffset = Vector2.zero;
+    //public Vector2 shootOriginOffset = Vector2.zero;
 
     //bullet info
     public float bulletSpeed = 5;
@@ -66,7 +67,7 @@ public class TowerBehavior : MonoBehaviour
 
     protected virtual void Start()
     {
-        playerIndicator.SetActive(false);
+        reloadFrame.SetActive(false);
         loopingIndicator.SetActive(false);
         Pointer.SetActive(false);
 
@@ -91,6 +92,16 @@ public class TowerBehavior : MonoBehaviour
 
     private void Update()
     {
+        //using Mathf.Lerp to clamp it below 1
+        reloadBar.transform.localScale = new Vector2(Mathf.Lerp(0, 1, _timeSinceLastShot / reloadInterval), 1);
+        if(reloadBar.transform.localScale.x >= 1)
+        {
+            reloadBar.GetComponent<SpriteRenderer>().color = Color.green;
+        }
+        else
+        {
+            reloadBar.GetComponent<SpriteRenderer>().color = Color.yellow;
+        }
         if (!isEnabled) return;
         if (Input.GetKeyDown(KeyCode.Return) && _playbackCoroutine == null)
         {
@@ -135,7 +146,6 @@ public class TowerBehavior : MonoBehaviour
             Bullet,
             (Vector2) transform.position
             + (Vector2) Bullet.transform.localPosition
-            + shootOriginOffset
             + direction * shootOriginMagnitude,
             Quaternion.Euler(Pointer.transform.eulerAngles + Bullet.transform.localEulerAngles),
             transform
@@ -160,8 +170,10 @@ public class TowerBehavior : MonoBehaviour
 
     public void LoseControl()
     {
-        playerIndicator.SetActive(false);
+        reloadFrame.SetActive(false);
         loopingIndicator.SetActive(true);
+        UIManager.Instance.SetActiveEnterNotif(false);
+
         // Represent the ending of recording as a last entry
         recording.Add(new KeyValuePair<float, Tuple<Vector2, float>>(
             Time.time,
@@ -189,8 +201,9 @@ public class TowerBehavior : MonoBehaviour
 
     private void GainControl(bool stopPlaybackAndClearRecording = false)
     {
-        playerIndicator.SetActive(true);
+        reloadFrame.SetActive(true);
         isControlled = true;
+        UIManager.Instance.SetActiveEnterNotif(true);
         if (stopPlaybackAndClearRecording)
         {
             StopCoroutine(_playbackCoroutine);
@@ -233,7 +246,8 @@ public class TowerBehavior : MonoBehaviour
         {
             float playbackTime = 0;
             // Skip first entry which represents start time, and don't shoot during last entry
-            for (int i = 1; i < recording.Count; ++i)
+            // Skipping last entry's rotation too, hence "i < recording.Count - 1;"
+            for (int i = 1; i < recording.Count - 1; ++i)
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
                 float startDegrees = Pointer.transform.localEulerAngles.z;

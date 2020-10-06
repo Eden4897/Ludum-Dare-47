@@ -4,13 +4,6 @@ public class CrossbowTower : TowerBehavior
 {
     [SerializeField] private Animator crossbowAnimator;
 
-    private CrossbowTower()
-    {
-        // Default values
-        reloadInterval = 2;
-        shootOriginMagnitude = 1.4f;
-        shootOriginOffset = new Vector2(0, -0.2f);
-    }
     protected override void Start()
     {
         base.Start();
@@ -43,7 +36,7 @@ public class CrossbowTower : TowerBehavior
                 direction,
                 transform
             );
-            newBullet.transform.localPosition = shootOriginOffset;
+            newBullet.transform.localPosition = default;
             newBullet.GetComponent<Rigidbody2D>().velocity = force * bulletSpeed;
 
             newBullet.GetComponent<Bullet>().damage = bulletDamage;

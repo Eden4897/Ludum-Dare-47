@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI waveText;
     [SerializeField] private GameObject waveStartButton;
     [SerializeField] private GameObject pauseButton;
+    [SerializeField] private GameObject enterNotif;
 
     [SerializeField] private List<UIAnimator> UIAnimators;
 
@@ -107,5 +108,10 @@ public class UIManager : MonoBehaviour
     {
         waveStartButton.SetActive(state);
         //pauseButton.SetActive(!state);
+    }
+
+    public void SetActiveEnterNotif(bool state)
+    {
+        enterNotif.SetActive(state);
     }
 }

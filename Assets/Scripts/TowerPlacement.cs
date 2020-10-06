@@ -37,7 +37,6 @@ public class TowerPlacement : MonoBehaviour
         {
             for (int y = -grassTilemap.cellBounds.size.y; y < grassTilemap.cellBounds.size.y; ++y)
             {
-                Debug.Log("Lol");
                 TileBase tile = grassTilemap.GetTile(new Vector3Int(x, y, 0));
                 if(tile != null)
                 {
@@ -67,7 +66,7 @@ public class TowerPlacement : MonoBehaviour
             UpdateTiles(mousePos);
         }
 
-        if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && !Utility.IsPointerOverUI())
+        if (Input.GetMouseButtonUp(0) && !Utility.IsPointerOverUI())
         {
             TryPlaceBuilding(mousePos);
         }

@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] public GameObject loot;
     private int health = 20;
-    private int mana = 100;
+    private int mana = 50;
     private int wave = 0;
 
     public int Health

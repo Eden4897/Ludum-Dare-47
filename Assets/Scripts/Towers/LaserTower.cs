@@ -2,15 +2,6 @@
 
 public class LaserTower : TowerBehavior
 {
-    public float delay;
-    public LaserTower()
-    {
-        // Default values
-        reloadInterval = 0.5f;
-        shootOriginMagnitude = 0.8f;
-        shootOriginOffset = new Vector2(0, 0.65f);
-    }
-
     protected override void Shoot()
     {
         Animator.Play("LaserAttack");
@@ -26,7 +17,7 @@ public class LaserTower : TowerBehavior
                 direction,
                 transform
             ); ;
-            newBullet.transform.localPosition = shootOriginOffset;
+            newBullet.transform.localPosition = new Vector3(0, 0);
 
             newBullet.GetComponent<Bullet>().damage = bulletDamage;
             newBullet.GetComponent<Bullet>().ignoreCol = gameObject;
@@ -36,6 +27,6 @@ public class LaserTower : TowerBehavior
             },
             bulletLife);
             OnShoot();
-        }, delay);
+        }, 0.5f);
     }
 }
