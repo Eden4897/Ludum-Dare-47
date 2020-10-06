@@ -233,21 +233,28 @@ public class TowerBehavior : MonoBehaviour
             yield return new WaitForSeconds(999);
         }
 
-        // Make sure the last recording is of the length of "bulletLife"
+        // Make sure the last recording is of the length of "reloadInterval"
         // to avoid instant shots on the threshold between last and first shot
         recording[recording.Count - 1] = new KeyValuePair<float, Tuple<Vector2, float>>(
             recording.Count > 2
-                ? recording[recording.Count - 2].Key + bulletLife
-                : bulletLife,
+                ? recording[recording.Count - 2].Key + reloadInterval
+                : reloadInterval,
             recording[recording.Count - 1].Value
         );
+
+        // Wait for a remaining reload interval until the playback starts
+        yield return new WaitForSeconds(reloadInterval - _timeSinceLastShot);
+        // TODO: maybe something like this (but this would add another delay after the recording ends)
+        // recording[0] = new KeyValuePair<float, Tuple<Vector2, float>>(
+        //     recording[0].Key - (reloadInterval - _timeSinceLastShot),
+        //     recording[0].Value
+        // );
 
         while (true)
         {
             float playbackTime = 0;
             // Skip first entry which represents start time, and don't shoot during last entry
-            // Skipping last entry's rotation too, hence "i < recording.Count - 1;"
-            for (int i = 1; i < recording.Count - 1; ++i)
+            for (int i = 1; i < recording.Count; ++i)
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
                 float startDegrees = Pointer.transform.localEulerAngles.z;
