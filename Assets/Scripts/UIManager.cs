@@ -54,19 +54,13 @@ public class UIManager : MonoBehaviour
         // {
         //     StartSpawningTower(towerPrefabManual);
         // }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            // Re-register as game running in case the game was launched without going through Title (e.g. in Editor)
-            TitleManager.GameRunning = true;
-            SceneManager.LoadScene(TitleManager.TitleScreenName, LoadSceneMode.Additive);
-        }
     }
 
-    public void StartSpawningTower(TowerBehavior towerPrefab)
+    public bool StartSpawningTower(TowerBehavior towerPrefab)
     {
         if (GameManager.Instance.Mana < towerPrefab.cost)
         {
-            return;
+            return false;
         }
 
         if (towerPlacement.currentTower)
@@ -76,6 +70,7 @@ public class UIManager : MonoBehaviour
 
         towerPlacement.SetActive(true);
         towerPlacement.currentTower = Instantiate(towerPrefab).GetComponent<TowerBehavior>();
+        return true;
     }
 
     public void OnManaChange()

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -46,6 +47,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlayOne(AudioClip clip)
     {
+        if (!isEffectsEnabled)
+        {
+            return;
+        }
+
         audioSource.PlayOneShot(clip);
         // _audioSourcesPool[_audioSourcesPoolIndex].PlayOneShot(clip);
         // _audioSourcesPoolIndex = (_audioSourcesPoolIndex + 1) % _audioSourcesPool.Length;
@@ -63,9 +69,9 @@ public class AudioManager : MonoBehaviour
         audioSource.volume = Mathf.Lerp(0, max, originalPercentageInGame);
     }
 
+    [Obsolete("Use PlayOne instead", true)]
     public void PlaySound(AudioClip audioClip)
     {
-        if (!isEffectsEnabled) return;
         AudioSource source = gameObject.AddComponent(typeof(AudioSource)) as AudioSource;
         source.clip = audioClip;
         source.volume = max;

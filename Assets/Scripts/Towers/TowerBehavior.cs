@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Assertions;
 using Random = UnityEngine.Random;
@@ -233,20 +231,13 @@ public class TowerBehavior : MonoBehaviour
             yield return new WaitForSeconds(999);
         }
 
-        // Make sure the last recording is of the length of "bulletLife"
-        // to avoid instant shots on the threshold between last and first shot
-        recording[recording.Count - 1] = new KeyValuePair<float, Tuple<Vector2, float>>(
-            recording.Count > 2
-                ? recording[recording.Count - 2].Key + bulletLife
-                : bulletLife,
-            recording[recording.Count - 1].Value
-        );
+        // Wait for a remaining reload interval before the playback starts
+        float bonusPlaybackTime = reloadInterval - _timeSinceLastShot;
 
         while (true)
         {
             float playbackTime = 0;
-            // Skip first entry which represents start time, and don't shoot during last entry
-            // Skipping last entry's rotation too, hence "i < recording.Count - 1;"
+            // Skip first entry which represents start time, and the last entry which represents end time
             for (int i = 1; i < recording.Count - 1; ++i)
             {
                 float playbackNextTarget = recording[i].Key - recording[0].Key;
@@ -268,22 +259,27 @@ public class TowerBehavior : MonoBehaviour
                     );
                 }
 
-                while (playbackTime <= playbackNextTarget)
+                while (playbackTime <= playbackNextTarget + bonusPlaybackTime)
                 {
                     playbackTime += Time.deltaTime;
                     var partialDegrees = startDegrees + (recording[i].Value.Item2 - startDegrees)
                         * ((playbackTime - (recording[i - 1].Key - recording[0].Key))
-                           / (recording[i].Key - recording[i - 1].Key));
+                           / (recording[i].Key - recording[i - 1].Key + bonusPlaybackTime));
                     Pointer.transform.localEulerAngles = new Vector3(0f, 0f, partialDegrees);
                     yield return null;
                 }
 
                 Pointer.transform.localEulerAngles = new Vector3(0f, 0f, recording[i].Value.Item2);
-                if (i != recording.Count - 1)
-                {
-                    Shoot();
-                }
+                Shoot();
+
+                // After consuming the bonus time it has to disappear, so the next playback interval gets fully applied
+                playbackTime -= bonusPlaybackTime;
+                bonusPlaybackTime = 0;
             }
+
+            // Make sure the pause before the first recording is of the length of reload interval
+            // to avoid instant shots on the threshold between the last and first shots
+            bonusPlaybackTime = reloadInterval;
         }
     }
 

@@ -16,6 +16,7 @@ public class UIAnimator : MonoBehaviour
     [SerializeField] private Image buttonImage;
 
     private bool _isImageColorActive;
+    private bool _isMouseOver;
 
     public void OnManaChanged()
     {
@@ -34,8 +35,10 @@ public class UIAnimator : MonoBehaviour
             costText.color = Color.red;
         }
     }
+
     public void OnPointerEnter()
     {
+        _isMouseOver = true;
         AudioManager.Instance.PlayOne(AudioManager.Instance.menuHoverAudio);
         animator.SetBool("Enter", true);
         animator.SetBool("Exit", false);
@@ -43,6 +46,7 @@ public class UIAnimator : MonoBehaviour
 
     public void OnPoinerExit()
     {
+        _isMouseOver = false;
         if (_isImageColorActive)
         {
             return;
@@ -54,45 +58,52 @@ public class UIAnimator : MonoBehaviour
 
     public void OnPoinerClick()
     {
-        // Deselect the previous button (or this button if it's selected)
+        // Deselect the previous button (or this button if it's selected, in which case don't continue the selection)
         if (!ReferenceEquals(towerPlacement.LastUiAnimator, null))
         {
-            towerPlacement.LastUiAnimator.DeselectButton();
-            if (towerPlacement.LastUiAnimator == this)
+            try
             {
-                towerPlacement.LastUiAnimator = null;
-                return;
+                if (towerPlacement.LastUiAnimator == this)
+                {
+                    return;
+                }
+            }
+            finally
+            {
+                towerPlacement.LastUiAnimator.DeselectButton();
             }
         }
 
         // Button selection
-        AudioManager.Instance.PlayOne(AudioManager.Instance.menuSelectAudio);
-        towerPlacement.LastUiAnimator = this;
         if (towerPrefab)
         {
-            SpawnTower();
+            if (UIManager.Instance.StartSpawningTower(towerPrefab))
+            {
+                OnButtonSelected();
+            }
         }
         else
         {
             towerPlacement.IsRemovingTower = true;
-            SetImageColorActive(true);
+            OnButtonSelected();
         }
+    }
+
+    private void OnButtonSelected()
+    {
+        SetImageColorActive(true);
+        AudioManager.Instance.PlayOne(AudioManager.Instance.menuSelectAudio);
+        towerPlacement.LastUiAnimator = this;
     }
 
     public void SetImageColorActive(bool active)
     {
         _isImageColorActive = active;
         buttonImage.color = active ? new Color(0, 1, 0, 0.39f) : new Color(0.91f, 0.91f, 0.91f, 0.39f);
-        if (!active)
+        if (!active && !_isMouseOver)
         {
             OnPoinerExit();
         }
-    }
-
-    public void SpawnTower()
-    {
-        UIManager.Instance.StartSpawningTower(towerPrefab);
-        SetImageColorActive(true);
     }
 
     public void DeselectButton()
