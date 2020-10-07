@@ -10,7 +10,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Toggle EffectsToggle;
     [SerializeField] private Slider volumeSlider;
 
-    private void Start()
+    private void OnEnable()
     {
         //Debug.Log(AudioManager.Instance.isTrackEnabled);
         TrackToggle.isOn = AudioManager.Instance.isTrackEnabled;
